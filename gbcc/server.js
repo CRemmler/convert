@@ -51,7 +51,7 @@ io.on('connection', function(socket){
 			// if user is first to enter a room, and only one room exists, then enable the timer
 			if (Object.keys(roomData).length === 0) { 
 				// if teacher and student have different interfaces (hubnet, not gbcc)
-				if (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.serverComponents.componentRange) {
+				if (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.studentComponents.componentRange) {
 					enableTimer();
 				} 
 			}

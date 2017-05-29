@@ -82,7 +82,7 @@ Interface = (function() {
     $(".admin-body").css("display","none");
     $(".netlogo-button:not(.hidden)").addClass("student-button");
     $(".netlogo-slider:not(.hidden)").addClass("student-input");
-    $(".netlogo-switch:not(.hidden)").addClass("student-input");
+    $(".netlogo-switcher:not(.hidden)").addClass("student-input");
     $(".netlogo-chooser:not(.hidden)").addClass("student-input");
     $(".netlogo-monitor:not(.hidden)").addClass("student-input");
   }

@@ -89,15 +89,22 @@ jQuery(document).ready(function() {
   });
   // when student clicks on chooser, switch, slider on Student Interface  
   $(".netlogo-widget-container").on("click", ".student-input", function() {
-    var value;
+    var label, value, id;
     if ($(this).attr("id").includes("chooser")) {
-      value = $(this).text().substr(0,$(this).text().indexOf(" "));
+      id = $(this).attr("id");
+      label = $("#"+id+" span").text()
+      value = $("#"+id+" option:selected").val()
     } else if ($(this).attr("id").includes("slider")) {
-      value = $(this).text().trim();
+      id = $(this).attr("id");
+      label = $("#"+id+" input").text().trim();
+      value = $("#"+id+" input").val();
     } else if ($(this).attr("id").includes("switch")) {
-      value = +$(this).children().text();
+      id = $(this).attr("id");
+      label = $("#"+id+" span").text();
+      value = $("#"+id+" input").val();
     }
-    //socket.emit("send command", {hubnetMessageTag: $(this).text().trim(), hubnetMessage:value});
-    socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: $(this).text().trim(), hubnetMessage:value});
+    //console.log("send value "+value + " " + label + " " + id);
+    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:parseInt(value)});
+    socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:parseInt(value)});
   });
 });
