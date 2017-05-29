@@ -1,0 +1,16 @@
+{
+  "interfaceJs": {
+    "loginComponents": {
+    },
+    "studentComponents": {
+    },
+    "teacherComponents": {
+    }
+  },
+  "clientJs": {
+    "reporterComponents": {
+    },
+    "inputComponents": {
+    }
+  }
+}

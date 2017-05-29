@@ -12,7 +12,8 @@
       .yellow { border: 2px solid yellow; }
       .green{ border: 2px solid #00cc00; }
       .blue { border: 2px solid blue; }
-      .purple { border: 2px solid #cc00ff; }
+      .indigo { border: 2px solid #9933ff; }
+      .violet{ border: 2px solid #cc3399; }
       div {
         border-radius: 10px;
         width: 600px;
@@ -25,7 +26,7 @@
     <h3>Convert "NetLogo Hubnet" to "NetLogo Hubnet Web"</h3>
     <p>
     <div class='red'><b>1. Find a NetLogo Hubnet file.</b>
-      <p>Run NetLogo 6.x. <br>Open "Gridlock Hubnet". <br>Save as "GridlockHubnet.nlogo"
+      <br>Run NetLogo 6.x. <br>Open "Gridlock Hubnet". <br>Save as "GridlockHubnet.nlogo"
     </div>
     <p>
     <div class='orange'><b>2. Upload a NetLogo Hubnet file.</b>
@@ -38,13 +39,10 @@
     </div>
     <p>
     <div class='yellow'><b>3. Receive Download of a NetLogo Hubnet Web zip file.</b>
-      <p><form method="get" action="filedownload">
-        <button type="submit" id="downloadButton" onclick="return confirm('Download file?')">Download</button>
-      </form>
     </div>
     <p>
     <div class='green'><b>4. Run NetLogo Hubnet Web App locally.</b>
-      <p>Install node and npm.
+      <br>Install node and npm.
       <br>Unzip the compressed NetLogo Hubnet Web file.
       <br>In a command line, navigate to the unzipped folder.
       <br>Type <span class='code'>npm install</span> to install dependencies.
@@ -53,12 +51,19 @@
       <br>Open a browser and go to <span class='code'>localhost:3000</span>
     </div>
     <p>
-    <div class='blue'><b>5. Host NetLogo Hubnet Web App remotely.</b>
-      <p>Build and deploy on Heroku.com
+    <div class='blue'><b>4. Troubleshoot.</b>
+      <br>If there is an error like <span class='code'>hubnet-reset is not defined</span>,
+      then that command is not implemented in NetLogo Hubnet Web, and you should comment it out.
+      <br> In index.html, find the NetLogo code and change <span class='code'>hubnet-reset</span> 
+      to <span class='code'>;; hubnet-reset</span>.
     </div>
     <p>
-    <div class='purple'><b>6. Share Activities</b>
-      <p>Group-based Cloud Computing
+    <div class='indigo'><b>5. Host NetLogo Hubnet Web App remotely.</b>
+      <br>Build and deploy on Heroku.com
+    </div>
+    <p>
+    <div class='violet'><b>6. Share Activities</b>
+      <br>Group-based Cloud Computing
       <br><a href="www.remmler.org/gbcc">www.remmler.org/gbcc</a>
       <br>c_remmler@yahoo.com
     </div>
