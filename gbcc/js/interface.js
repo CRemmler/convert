@@ -2,7 +2,7 @@ Interface = (function() {
 
   var items = {};
 
-  function displayLoginInterface(rooms, components, activityType) {
+  function displayLoginInterface(rooms, components) {
     var roomButtonHtml, roomButtonId;
     setupItems();
     $(".netlogo-tab-area").addClass("hidden");

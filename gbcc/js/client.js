@@ -2,6 +2,7 @@ var socket;
 var universe;
 var universes = {};
 var commandQueue = [];
+var activityType;
 
 jQuery(document).ready(function() {
   var userId;
@@ -13,7 +14,6 @@ jQuery(document).ready(function() {
   socket.on("save settings", function(data) {
     userId = data.userId; 
     userType = data.userType; 
-    world.hubnetManager.gbccSetupGallery();
   });
   
   // display teacher or student interface
@@ -27,6 +27,7 @@ jQuery(document).ready(function() {
         break;
       case "login":
         Interface.showLogin(data.rooms, data.components, data.activityType);
+        activityType = data.activityType;
         break;
       case "disconnected":
         Interface.showDisconnected();
@@ -53,22 +54,40 @@ jQuery(document).ready(function() {
   socket.on("display reporter", function(data) {
     if (data.hubnetMessageTag === "canvas") {
       if ($("#image-"+data.hubnetMessageSource).length === 0) {
-        console.log("display canvas",data.hubnetMessageSource);
         var canvasImg = new Image();
         canvasImg.id = "image-" + data.hubnetMessageSource;
         canvasImg.src = data.hubnetMessage;
+        canvasImg.userId = data.hubnetMessageSource;
         canvasImg.onclick = function() {
-          socket.emit("get reporter", {hubnetMessageSource: data.hubnetMessageSource, hubnetMessageTag: "code-example"});
+          world.hubnetManager.setGbccCanvasSource(canvasImg.userId);
+          world.hubnetManager.gbccRunCode("canvas-click");
         };  
         $(".netlogo-gallery").append(canvasImg);
       } else {        
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
-      $(data.components[data.hubnetMessageTag]).val(data.hubnetMessage);
+      //console.log(data.components[data.hubnetMessageTag]);
+      if (activityType === "hubnet") {
+        // send it to reporters
+        $(data.components[data.hubnetMessageTag]).val(data.hubnetMessage);
+      } else {
+        // save it in world
+        switch (data.hubnetMessageTag) {
+          case "patches": 
+            break;
+          case "turtles": 
+            break;
+          default: 
+            if (world.observer.getGlobal(data.hubnetMessageTag) != undefined) {
+              world.observer.setGlobal(data.hubnetMessageTag, data.hubnetMessage);
+            }
+            break;
+        }
+      }
     }
   });
-  
+
   socket.on("execute command", function(data) {
     var commandObject = {};
     commandObject.messageSource = data.hubnetMessageSource;

@@ -17374,7 +17374,7 @@
             eDae = (new E).f("GBCC-RUN-CODE", R(function() {
                 return (new KNak).d()
             })),
-            eDaf = (new E).f("GBCC-CANVAS-CLICK", R(function() {
+            eDaf = (new E).f("GBCC-WAIT", R(function() {
                 return (new KNal).d()
             }));
         this.zj = kf(M$, (new x).g([N$,
@@ -18279,8 +18279,8 @@
             YSo = (new E).f("etc._gbccget", XSn),
             YSp = F(t(), (new x).g(["GBCC-RUN-CODE"])),
             YSq = (new E).f("etc._gbccruncode", YSp),
-            YSr = F(t(), (new x).g(["GBCC-CANVAS-CLICK"])),
-            YSs = (new E).f("etc._gbcccanvasclick", YSr);
+            YSr = F(t(), (new x).g(["GBCC-WAIT"])),
+            YSs = (new E).f("etc._gbccWait", YSr);
             
         this.Aia = kf(fDa, (new x).g([hDa, jDa, lDa, nDa, pDa,
             rDa, tDa, vDa, xDa, zDa, BDa, DDa, FDa, HDa, JDa, LDa, NDa, PDa, RDa, TDa, VDa, XDa, ZDa, aEa, cEa, eEa, gEa, iEa, kEa, mEa, oEa, qEa, sEa, uEa, wEa, yEa, AEa, CEa, EEa, GEa, IEa, KEa, MEa, OEa, QEa, SEa, UEa, WEa, YEa, $Ea, bFa, dFa, fFa, hFa, jFa, lFa, nFa, pFa, rFa, tFa, vFa, xFa, zFa, BFa, DFa, FFa, HFa, JFa, LFa, NFa, PFa, RFa, TFa, VFa, XFa, ZFa, aGa, cGa, eGa, gGa, iGa, kGa, mGa, oGa, qGa, sGa, uGa, wGa, yGa, AGa, CGa, EGa, GGa, IGa, KGa, MGa, OGa, QGa, SGa, UGa, WGa, YGa, $Ga, bHa, dHa, fHa, hHa, jHa, lHa, nHa, pHa, rHa, tHa, vHa, xHa, zHa, BHa, DHa, FHa, HHa, JHa, LHa, NHa, PHa, RHa, THa, VHa, XHa, ZHa, aIa, cIa,
@@ -56766,7 +56766,7 @@
             xwa(a) ? "SelfManager.self().goHome" : ywa(a) ? "SelfManager.self().moveTo" : zwa(a) ? "SelfManager.self().penManager.lowerPen" : Awa(a) ? "SelfManager.self().penManager.useEraser" : Bwa(a) ? "SelfManager.self().penManager.raisePen" : Cwa(a) ? "SelfManager.self().rideMe" : Dwa(a) ? "SelfManager.self().right" : Ewa(a) ? "SelfManager.self().setXY" : Fwa(a) ? "SelfManager.self().stamp" : Gwa(a) ? "SelfManager.self().stampErase" : Hwa(a) ? "SelfManager.self().tie" : Iwa(a) ? "SelfManager.self().untie" : Jwa(a) ? "SelfManager.self().watchMe" : Kwa(a) ? "plotManager.disableAutoplotting" :
             Lwa(a) ? "plotManager.enableAutoplotting" : Mwa(a) ? "plotManager.clearAllPlots" : Nwa(a) ? "plotManager.clearPlot" : Owa(a) ? "plotManager.createTemporaryPen" : Pwa(a) ? "plotManager.drawHistogramFrom" : Qwa(a) ? "plotManager.lowerPen" : Rwa(a) ? "plotManager.resetPen" : Swa(a) ? "plotManager.raisePen" : Twa(a) ? "plotManager.plotValue" : Uwa(a) ? "plotManager.plotPoint" : Vwa(a) ? "plotManager.setCurrentPen" : Wwa(a) ? "plotManager.setCurrentPlot" : Xwa(a) ? "plotManager.setHistogramBarCount" : Ywa(a) ? "plotManager.setPenColor" : Zwa(a) ? "plotManager.setPenInterval" :
             $wa(a) ? "plotManager.setPenMode" : axa(a) ? "plotManager.setXRange" : bxa(a) ? "plotManager.setYRange" : cxa(a) ? "plotManager.setupPlots" : dxa(a) ? "plotManager.updatePlots" : exa(a) ? "world.clearAll" : fxa(a) ? "world.clearDrawing" : gxa(a) ? "world.observer.clearCodeGlobals" : hxa(a) ? "world.clearPatches" : ixa(a) ? "world.turtleManager.clearTurtles" : ixb(a) ? "world.hubnetManager.hubnetFetchMessage" : ixc(a) ? "world.hubnetManager.hubnetSend" : jxa(a) ? "world.ticker.clear" : kxa(a) ? "world.linkManager.clear" : lxa(a) ? "world.resize" : mxa(a) ? "world.setPatchSize" : nxa(a) ? "world.ticker.reset" : oxa(a) ? "world.ticker.tick" : pxa(a) ? "world.ticker.tickAdvance" :
-            qxa(a) ? "workspace.timer.reset" : rxa(a) ? "workspace.rng.setSeed" : sxa(a) ? "world.observer.follow" : txa(a) ? "world.observer.ride" : uxa(a) ? "world.observer.watch" : vxa(a) ? "world.observer.resetPerspective" : wxa(a) ? "LayoutManager.layoutSpring" : xxa(a) ? "LayoutManager.layoutCircle" : yxa(a) ? "LayoutManager.layoutRadial" : zxa(a) ? "LayoutManager.layoutTutte" : Axa(a) ? "world.changeTopology" : Bxa(a) ? "Tasks.apply" : Cxa(a) ? "Prims.stdout" : Dxa(a) ? "UserDialogPrims.confirm" : ixd(a) ? "world.hubnetManager.gbccGet" : ixg(a) ? "world.hubnetManager.gbccCanvasClick" : ixe(a) ? "world.hubnetManager.gbccRunCode" : Exa(a) ? "ExportPrims.exportOutput" : Fxa(a) ? "notImplemented('display', undefined)" :
+            qxa(a) ? "workspace.timer.reset" : rxa(a) ? "workspace.rng.setSeed" : sxa(a) ? "world.observer.follow" : txa(a) ? "world.observer.ride" : uxa(a) ? "world.observer.watch" : vxa(a) ? "world.observer.resetPerspective" : wxa(a) ? "LayoutManager.layoutSpring" : xxa(a) ? "LayoutManager.layoutCircle" : yxa(a) ? "LayoutManager.layoutRadial" : zxa(a) ? "LayoutManager.layoutTutte" : Axa(a) ? "world.changeTopology" : Bxa(a) ? "Tasks.apply" : Cxa(a) ? "Prims.stdout" : Dxa(a) ? "UserDialogPrims.confirm" : ixd(a) ? "world.hubnetManager.gbccGet" : ixg(a) ? "world.hubnetManager.gbccWait" : ixe(a) ? "world.hubnetManager.gbccRunCode" : Exa(a) ? "ExportPrims.exportOutput" : Fxa(a) ? "notImplemented('display', undefined)" :
             c.t(a)
     };
     l.cb = function(a) {
@@ -88880,6 +88880,55 @@ l.b = m({
     j: 1
 });
         
+        
+// gbcc-wait
+function KNal() {
+  hZ.call(this)
+}
+KNal.prototype = new iZ;
+KNal.prototype.constructor = KNal;
+l = KNal.prototype;
+l.d = function() {
+  hZ.prototype.U.call(this, (new x).g([W(I())]));
+  return this
+};
+l.x = g("_gbccwait");
+l.v = g(0);
+l.p = function(a) {
+    return ixg(a) && !0
+};
+l.w = function(a) {
+    throw (new T).c("" + a);
+};
+l.m = function() {
+    return Z(V(), this)
+};
+l.s = function() {
+    return Q(P(), this)
+};
+l.z = function() {
+    return $(this)
+};
+
+function ixg(a) {
+    return !!(a && a.b && a.b.o.DKD)
+}
+l.b = m({
+    DKD: 0
+}, !1, "org.nlogo.core.prim.etc._gbccwait", {
+    DKD: 1, 
+    nf: 1,
+    e: 1,
+    ta: 1,
+    E: 1,
+    G: 1,
+    y: 1,
+    r: 1,
+    k: 1,
+    j: 1
+});
+
+/*        
 // gbcc-canvas-click
 
 function KNal() {
@@ -88965,7 +89014,7 @@ l.b = m({
     k: 1,
     j: 1
 });
-
+*/
 
   
     function QK() {

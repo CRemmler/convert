@@ -12,12 +12,13 @@ app.use(express.static(__dirname));
 app.get('/', function(req, res){
 	res.sendfile('index.html');
 });
-var activityType = (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.studentComponents.componentRange) ? "hubnet" : "gbcc";
 
+var activityType = ((config.interfaceJs.teacherComponents.componentRange[0] === config.interfaceJs.studentComponents.componentRange[0])
+  && (config.interfaceJs.teacherComponents.componentRange[1] === config.interfaceJs.studentComponents.componentRange[1])) ?
+	"gbcc" : "hubnet";
+	
 io.on('connection', function(socket){
 	var rooms = [];
-	var activityType = (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.studentComponents.componentRange) ?
-		"hubnet" : "gbcc";
 	
 	for (var key in roomData) { rooms.push(key); }
 	socket.emit("display interface", {userType: "login", rooms: rooms, components: config.interfaceJs.loginComponents, activityType: activityType});
@@ -82,6 +83,7 @@ io.on('connection', function(socket){
 			// tell teacher or student to display their interface
 			//socket.emit("display interface", {userType: socket.myUserType, room: myRoom});
 			if (myUserType === "teacher") {
+				// send the teacher a teacher interface
 				socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});
 				// remember that there is already a teacher in room
 				roomData[myRoom].teacherInRoom = true;
@@ -91,9 +93,34 @@ io.on('connection', function(socket){
 				for (var key in roomData) { rooms.push(key); }
 				socket.to("login").emit("display interface", {userType: "login", rooms: rooms, components: config.interfaceJs.loginComponents, activityType: activityType});
 			} else {
-				// send teacher a hubnet-enter-message
-				socket.emit("display interface", {userType: "student", room: myRoom, components: config.interfaceJs.studentComponents});
-				socket.to(myRoom+"-teacher").emit("execute command", {hubnetMessageSource: myUserId, hubnetMessageTag: "hubnet-enter-message", hubnetMessage: ""});
+				if (activityType === "hubnet") {
+					// send student a student interface
+					socket.emit("display interface", {userType: "student", room: myRoom, components: config.interfaceJs.studentComponents});
+					// send teacher a hubnet-enter-message
+					socket.to(myRoom+"-teacher").emit("execute command", {hubnetMessageSource: myUserId, hubnetMessageTag: "hubnet-enter-message", hubnetMessage: ""});
+				} else {
+					// it's gbcc, so send student a teacher interface
+					socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});				
+					var dataObject
+					if (roomData[myRoom].userData != {}) {
+						
+						for (var k in roomData[myRoom].userData) {
+							//console.log(roomData[myRoom].userData[k]["canvas"]);
+							if (roomData[myRoom].userData[k]["canvas"] != undefined) {
+								dataObject = {
+									hubnetMessageSource: k,
+									hubnetMessageTag: "canvas",
+									hubnetMessage: roomData[myRoom].userData[k]["canvas"],
+									components: config.clientJs.reporterComponents,
+									userId: myUserId,
+									activityType: activityType
+								};
+								socket.emit("display reporter", dataObject);
+							}
+						}
+					}
+				
+				}
 			}
 		}
 	});	
@@ -103,8 +130,7 @@ io.on('connection', function(socket){
 		var myRoom = socket.myRoom;
 		var userId;
 		var turtleId, turtle;
-		var patchId, patch;
-		
+		var patchId, patch;	
 		for (var key in data.turtles) 
 		{
 			turtle = data.turtles[key];
@@ -169,7 +195,8 @@ io.on('connection', function(socket){
 				hubnetMessageTag: data.hubnetMessageTag,
 				hubnetMessage: data.hubnetMessage,
 				components: config.clientJs.reporterComponents,
-				userId: myUserId
+				userId: myUserId,
+				activityType: activityType
 			};
 		 	if (destination === "all-users"){
 				socket.to(myRoom+"-teacher").emit("display reporter", dataObject);
@@ -184,46 +211,20 @@ io.on('connection', function(socket){
 	// pass reporter from student to server
 	socket.on("get reporter", function(data) {
 		var myRoom = socket.myRoom;
+		var myUserId = socket.id;
 		socket.messageQueue = [];
-		var i=0;
-		if (data.hubnetMessageSource === "all users") {
-			for (var key in roomData[myRoom].userData) {
-				if (roomData[myRoom].userData[key][data.hubnetMessageTag]) {
-					socket.messageQueue.push({
-						key: key,
-						tag: data.hubnetMessageTag,
-						room: myRoom
-					});
-				}
-				i++;
-				if (i === Object.keys(roomData[myRoom].userData).length) 
-				{ processMessage(socket.messageQueue); }	
-			}
-		} else {
-			if (roomData[myRoom].userData[data.hubnetMessageSource]) {
-				socket.emit("display reporter", {
-					hubnetMessageSource: data.hubnetMessageSource,
-					hubnetMessageTag: data.hubnetMessageTag,
-					hubnetMessage: roomData[myRoom].userData[data.hubnetMessageSource][data.hubnetMessageTag],
-					components: config.clientJs.reporterComponents,
-				});
-			}
+		if (roomData[myRoom].userData[data.hubnetMessageSource]) {
+			var dataObject = {
+				hubnetMessageSource: data.hubnetMessageSource,
+				hubnetMessageTag: data.hubnetMessageTag,
+				hubnetMessage: roomData[myRoom].userData[data.hubnetMessageSource][data.hubnetMessageTag],
+				components: config.clientJs.reporterComponents,
+				userId: myUserId,
+				activityType: activityType
+			};
+			socket.emit("display reporter", dataObject);
 		}
 	});
-	
-	function processMessage(messageQueue) {
-		var messageObj = messageQueue.shift();
-		if (messageObj) {
-			// console.log("processMessage",messageObj);
-			socket.emit("display reporter", {
-				hubnetMessageSource: messageObj.key,
-				hubnetMessageTag: messageObj.tag,
-				hubnetMessage: roomData[messageObj.room].userData[messageObj.key][messageObj.tag],
-				components:""
-			});
-			processMessage(messageQueue);
-		}
-	}
 	
 	socket.on("admin clear room", function(data) {
 		clearRoom(data.roomName);

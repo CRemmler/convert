@@ -12,13 +12,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(__dirname));
   
 app.post('/fileupload',function(req,res){
+   console.log("NOTE FROM C: If you get an ENOENT error, place your file in this directory, and then upload.");
    var form = new formidable.IncomingForm();
    var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
-   form.uploadDir = __dirname + '/nlogo';
    form.parse(req, function(err, fields, files) {
      var file = files.filetoupload;
      nlogoFileName = file.name || "error";
-     //fs.rename(file.path, form.uploadDir + "/" + nlogofile);
      var configFile;
      var nlogoFile;
      var indexFile;
