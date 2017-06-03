@@ -101,29 +101,35 @@ jQuery(document).ready(function() {
   socket.on("teacher disconnect", function(data) {
     Interface.showDisconnected();
   });
-    
-  // when student clicks on button on Student Interface
-  $(".netlogo-widget-container").on("click", ".student-button", function() {
-    socket.emit("send command", {hubnetMessageTag: $(this).text().trim(), hubnetMessage:""});
-  });
-  // when student clicks on chooser, switch, slider on Student Interface  
+  
+  // when student clicks on chooser, slider, switch, input-box, slider or button on Student Interface  
   $(".netlogo-widget-container").on("click", ".student-input", function() {
     var label, value, id;
     if ($(this).attr("id").includes("chooser")) {
       id = $(this).attr("id");
-      label = $("#"+id+" span").text()
-      value = $("#"+id+" option:selected").val()
+      label = $("#"+id+" .netlogo-label").text();
+      value = $("#"+id+" option:selected").val();
     } else if ($(this).attr("id").includes("slider")) {
       id = $(this).attr("id");
-      label = $("#"+id+" input").text().trim();
+      label = $("#"+id+" .netlogo-label").text();
       value = $("#"+id+" input").val();
     } else if ($(this).attr("id").includes("switch")) {
       id = $(this).attr("id");
-      label = $("#"+id+" span").text();
-      value = $("#"+id+" input").val();
+      label = $("#"+id+" .netlogo-label").text();
+      value = $("#"+id+" input").prop("value");
+    } else if ($(this).attr("id").includes("inputBox")) {
+      id = $(this).attr("id");
+      label = $("#"+id+" .netlogo-label").text();
+      value = $("#"+id+" textarea").val();      
+    } else if ($(this).attr("id").includes("button")) {
+      id = $(this).attr("id");
+      label = $("#"+id+" .netlogo-label").text();
+      value = "";      
+    } 
+    if (!($(this).attr("id").includes("button"))) {
+      socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:value});      
     }
-    //console.log("send value "+value + " " + label + " " + id);
-    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:parseInt(value)});
-    socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:parseInt(value)});
+    console.log("send value "+value + " " + label + " " + id);
+    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
   });
 });

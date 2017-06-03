@@ -25,7 +25,6 @@ app.post('/fileupload',function(req,res){
      var widgetList = [];
      var inputComponentList = [];
      var reporterComponentList = [];
-     // read in x.nlogo file
      fs.readFileAsync(nlogoFileName, "utf8").then(function(data) {
         var array = data.toString().split("\n");
         nlogoFile = "";
@@ -36,68 +35,58 @@ app.post('/fileupload',function(req,res){
         var newWidget = false;
         var lastWidgetType = "";
         var label;
+        var widgets = ["BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUTBOX", "MONITOR", "OUTPUT", "TEXTBOX", "VIEW", "GRAPHICS-WINDOW"];
+        var viewWidgets = ["VIEW", "GRAPHICS-WINDOW"];
+        // input widgets are slider, switch, reporter widgets are monitor
         for(i in array) {
           nlogoFile = nlogoFile + array[i] + "\n";
-          if (arrayIndex === 1) { if ((array[i] === "") && (array[i = 1] != "")) { numTeacherWidgets++; } }
+          if (arrayIndex === 1) { if (widgets.indexOf(array[i]) > -1) { numTeacherWidgets++; } }
           if (arrayIndex === 8) {
-            if ((array[i] === "") && (array[(parseInt(i) + 1).toString()] != "")) { newWidget = true; numStudentWidgets++; }
-            if (array[i].includes("BUTTON") || array[i].includes("MONITOR") || array[i].includes("SLIDER") || 
-              array[i].includes("VIEW") || array[i].includes("CHOOSER") || array[i].includes("SWITCH")
-              || array[i].includes("INPUT")) {
-              if (lastWidgetType === "view") {}
-              if (lastWidgetType === "chooser") { inputComponentList.push([label, "netlogo-chooser-"+(numStudentWidgets + numTeacherWidgets - 3)]); }
-              if (lastWidgetType === "switch") { inputComponentList.push([label, "netlogo-switch-"+(numStudentWidgets + numTeacherWidgets - 3)]); }              
-              if (lastWidgetType === "slider") { inputComponentList.push([label, "netlogo-slider-"+(numStudentWidgets + numTeacherWidgets - 3)]); }
-              // for the buttons, find last NIL and add 3 more NILS after it
-              if (lastWidgetType === "button") { widget = widget.substr(0,widget.lastIndexOf("NIL"))+"NIL\nNIL\nNIL\nNIL\n"+widget.lastIndexOf("NIL"); }
-                //remove the last 4 \n (and everything in between) and append "\n0\n1\n11\n"              
-              if (lastWidgetType === "monitor") {
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget+'\n""\n0\n1\n11\n';
-                reporterComponentList.push([label, "#netlogo-monitor-"+(numStudentWidgets + numTeacherWidgets)+" output"]);
+            if ((widgets.indexOf(array[i]) > -1) || (array[i]==="@#$#@#$#@")) { 
+              if (array[i] != "VIEW") { numStudentWidgets++; }
+              switch (lastWidgetType) {
+                case "BUTTON": 
+                  widget = widget.substr(0,widget.lastIndexOf("NIL"))+"NIL\nNIL\nNIL\n"+widget.lastIndexOf("NIL")+"\n\n";
+                  break;
+                case "SLIDER": 
+                  inputComponentList.push([label, "netlogo-slider-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  break;
+                case "SWITCH": 
+                  inputComponentList.push([label, "netlogo-switch-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  break;
+                case "CHOOSER": 
+                  inputComponentList.push([label, "netlogo-chooser-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  break;
+                case "INPUTBOX": 
+                  inputComponentList.push([label, "netlogo-inputBox-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  break;
+                case "MONITOR": 
+                  widget = widget.substr(0,widget.lastIndexOf("\n"));
+                  widget = widget.substr(0,widget.lastIndexOf("\n"));
+                  widget = widget.substr(0,widget.lastIndexOf("\n"));
+                  widget = widget.substr(0,widget.lastIndexOf("\n"));
+                  widget = widget+'\n0\n1\n11\n\n';
+                  reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)+" output"]);
+                  break;
+                case "OUTPUT": break;
+                case "TEXTBOX": break;
+                case "VIEW": break;
               }
-              widgetList.push(widget);
-              if (array[i].includes("VIEW")) { lastWidgetType = "view"; label = array[(parseInt(i) + 5).toString()];}
-              if (array[i].includes("CHOOSER")) { lastWidgetType = "chooser"; label = array[(parseInt(i) + 5).toString()];}
-              if (array[i].includes("SWITCH")) { lastWidgetType = "switch"; label = array[(parseInt(i) + 5).toString()];}
-              if (array[i].includes("BUTTON")) { lastWidgetType = "button"; }
-              if (array[i].includes("SLIDER")) { lastWidgetType = "slider"; label = array[(parseInt(i) + 5).toString()]; }
-              if (array[i].includes("MONITOR")) { lastWidgetType = "monitor"; label = array[(parseInt(i) + 5).toString()]; }
-              newWidget = false;
-              widget = "\n";
-            }
-            if (!newWidget) { widget = widget + array[i] + "\n"; }
+              if ((widget != "") && (viewWidgets.indexOf(lastWidgetType > -1))) { 
+                widgetList.push(widget); 
+                widget = "";
+              }             
+              lastWidgetType = array[i];
+              label = array[(parseInt(i) + 5).toString()];
+            }  
+            if (lastWidgetType != "VIEW") { widget = widget + array[i] + "\n"; }
+
           }
-          if (array[i] === "@#$#@#$#@") { 
-            if (arrayIndex === 8) {
-              if (lastWidgetType === "view") {}
-              if (lastWidgetType === "chooser") { inputComponentList.push([label, "netlogo-chooser-"+(numStudentWidgets + numTeacherWidgets - 3)]); }
-              if (lastWidgetType === "switch") { inputComponentList.push([label, "netlogo-switch-"+(numStudentWidgets + numTeacherWidgets - 3)]); }              
-              if (lastWidgetType === "slider") { inputComponentList.push([label, "netlogo-slider-"+(numStudentWidgets + numTeacherWidgets - 3)]); }
-              // for the buttons, find last NIL and add 3 more NILS after it
-              if (lastWidgetType === "button") { widget = widget.substr(0,widget.lastIndexOf("NIL"))+"NIL\nNIL\nNIL\nNIL\n"+widget.lastIndexOf("NIL"); }
-                //remove the last 4 \n (and everything in between) and append "\n0\n1\n11\n"              
-              if (lastWidgetType === "monitor") {
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget.substr(0,widget.lastIndexOf("\n"));
-                widget = widget+'\n""\n0\n1\n11\n';
-                reporterComponentList.push([label, "#netlogo-monitor-"+(numStudentWidgets + numTeacherWidgets)+" output"]);
-              }
-              widgetList.push(widget);
-            }
-            arrayIndex++; 
-          }
+          if (array[i] === "@#$#@#$#@") { arrayIndex++; }
         }
         teacherWidgetRange = [0, numTeacherWidgets - 1];
-        studentWidgetRange = (numStudentWidgets === 0) ? teacherWidgetRange : [numTeacherWidgets, numTeacherWidgets + numStudentWidgets - 3];
-        loginWidgetRange = [(numTeacherWidgets + numStudentWidgets - 2),(numTeacherWidgets + numStudentWidgets - 2)];
-        widgetList.shift();
-
+        studentWidgetRange = (numStudentWidgets === 0) ? teacherWidgetRange : [numTeacherWidgets, numTeacherWidgets + numStudentWidgets - 1];
+        loginWidgetRange = [(numTeacherWidgets + numStudentWidgets), (numTeacherWidgets + numStudentWidgets)];
         var oldNlogoFile = nlogoFile;    
         var array = oldNlogoFile.toString().split("\n");
         nlogoFile = "";
@@ -115,93 +104,80 @@ app.post('/fileupload',function(req,res){
         }
         //console.log(nlogoFile);
       }).then(function() {
-        // read in config file
-        fs.readFileAsync("gbcc/config.json", "utf8").then(function(data) {
-           var array = data.toString().split("\n");
-           var configData = data;
-           configFile = "";
-           for(var i in array) {
-             configFile = configFile + array[i] + "\n";
-             if (array[i].includes("loginComponents")) { configFile = configFile + '      "componentRange": [' +loginWidgetRange + "]\n" }
-             if (array[i].includes("teacherComponents")) { configFile = configFile + '      "componentRange": [' +teacherWidgetRange + "]\n" }
-             if (array[i].includes("studentComponents")) { configFile = configFile + '      "componentRange": [' +studentWidgetRange + "]\n" }
-             if (array[i].includes("reporterComponents")) {
-               for (var j=0; j<reporterComponentList.length; j++) {
-                 configFile = configFile + '       "'+reporterComponentList[j][0]+'": "'+reporterComponentList[j][1]+'"';
-                 configFile = (j+1 != reporterComponentList.length) ? configFile +',\n' : configFile +'\n';
-               }
-             }
-             if (array[i].includes("inputComponents")) {
-               for (var j=0; j<inputComponentList.length; j++) {
-                 configFile = configFile + '       "'+inputComponentList[j][0]+'": "'+inputComponentList[j][1]+'"';
-                 configFile = (j+1 != inputComponentList.length) ? configFile +',\n' : configFile +'\n';
-               }
+      fs.readFileAsync("gbcc/config.json", "utf8").then(function(data) {
+         var array = data.toString().split("\n");
+         var configData = data;
+         configFile = "";
+         for(var i in array) {
+           configFile = configFile + array[i] + "\n";
+           if (array[i].includes("loginComponents")) { configFile = configFile + '      "componentRange": [' +loginWidgetRange + "]\n" }
+           if (array[i].includes("teacherComponents")) { configFile = configFile + '      "componentRange": [' +teacherWidgetRange + "]\n" }
+           if (array[i].includes("studentComponents")) { configFile = configFile + '      "componentRange": [' +studentWidgetRange + "]\n" }
+           if (array[i].includes("reporterComponents")) {
+             for (var j=0; j<reporterComponentList.length; j++) {
+               configFile = configFile + '       "'+reporterComponentList[j][0]+'": "'+reporterComponentList[j][1]+'"';
+               configFile = (j+1 != reporterComponentList.length) ? configFile +',\n' : configFile +'\n';
              }
            }
-         }).then(function() {
-            indexFile = "";
-            // read in index1
-            fs.readFileAsync("gbcc/index1.html", "utf8").then(function(data) {
-               var array = data.toString().split("\n");
-               for (i in array) { indexFile = indexFile + array[i] + "\n"; }
-               // add nlogoFile after index1
-               indexFile = indexFile + nlogoFile;
-             }).then(function() {
-                // add index3 after nlogoFile
-                fs.readFileAsync("gbcc/index3.html", "utf8").then(function(data) {
-                   var array = data.toString().split("\n");
-                   for (i in array) { indexFile = indexFile + array[i] + "\n"; }
-                }).then(function() {
-                      var zip = new JSZip();
-                      console.log(configFile);
-                      zip.file("config.json", configFile);
-                      zip.file("index.html", indexFile);
-                      zip.file(nlogoFileName, nlogoFile);
-                      fs.readFileAsync("gbcc/js/client.js", "utf8").then(function(data) {
-                         zip.file("js/client.js", data);
-                      }).then(function() {
-                        fs.readFileAsync("gbcc/js/interface.js", "utf8").then(function(data) {
-                           zip.file("js/interface.js", data);
-                        }).then(function() {
-                          fs.readFileAsync("gbcc/js/jquery.min.js", "utf8").then(function(data) {
-                             zip.file("js/jquery.min.js", data);
-                          }).then(function() {
-                            fs.readFileAsync("gbcc/js/tortoiseCompiler.js", "utf8").then(function(data) {
-                               zip.file("js/tortoiseCompiler.js", data);
-                            }).then(function() {
-                              fs.readFileAsync("gbcc/package.json", "utf8").then(function(data) {
-                                 zip.file("package.json", data);
-                              }).then(function() {
-                                fs.readFileAsync("gbcc/readme.md", "utf8").then(function(data) {
-                                   zip.file("readme.md", data);
-                                }).then(function() {
-                                  fs.readFileAsync("gbcc/server.js", "utf8").then(function(data) {
-                                     zip.file("server.js", data);
-                                  }).then(function() {
-                                  zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-                                    .pipe(fs.createWriteStream('out'+guid+'.zip'))
-                                    .on('finish', function () {
-                                        res.download('out'+guid+'.zip', function() {
-                                          var FullPath= __dirname + '/out'+guid+'.zip';
-                                          console.log(FullPath);
-                                          fs.unlink(FullPath, function() {
-                                            console.log(FullPath + " deleted");
-                                          });
-                                        });
-                                    });
-                                  }).catch(function(e) {
-                                    res.sendfile('index.html');
-                                    console.error(e.stack);
-                                  });
-                               });
-                            });
-                         });
-                      });
-                   });
-                });
+           if (array[i].includes("inputComponents")) {
+             for (var j=0; j<inputComponentList.length; j++) {
+               configFile = configFile + '       "'+inputComponentList[j][0]+'": "'+inputComponentList[j][1]+'"';
+               configFile = (j+1 != inputComponentList.length) ? configFile +',\n' : configFile +'\n';
+             }
+           }
+         }
+         console.log(configFile);
+      }).then(function() {
+      fs.readFileAsync("gbcc/index1.html", "utf8").then(function(data) {
+         indexFile = "";
+         var array = data.toString().split("\n");
+         for (i in array) { indexFile = indexFile + array[i] + "\n"; }
+         indexFile = indexFile + nlogoFile;
+      }).then(function() {
+      fs.readFileAsync("gbcc/index3.html", "utf8").then(function(data) {
+         var array = data.toString().split("\n");
+         for (i in array) { indexFile = indexFile + array[i] + "\n"; }
+      }).then(function() {
+        var zip = new JSZip();
+        zip.file("config.json", configFile);
+        zip.file("index.html", indexFile);
+        zip.file(nlogoFileName, nlogoFile);
+        fs.readFileAsync("gbcc/js/client.js", "utf8").then(function(data) {
+           zip.file("js/client.js", data);
+        }).then(function() {
+        fs.readFileAsync("gbcc/js/interface.js", "utf8").then(function(data) {
+           zip.file("js/interface.js", data);
+        }).then(function() {
+        fs.readFileAsync("gbcc/js/jquery.min.js", "utf8").then(function(data) {
+           zip.file("js/jquery.min.js", data);
+        }).then(function() {
+        fs.readFileAsync("gbcc/js/tortoiseCompiler.js", "utf8").then(function(data) {
+           zip.file("js/tortoiseCompiler.js", data);
+        }).then(function() {
+        fs.readFileAsync("gbcc/package.json", "utf8").then(function(data) {
+           zip.file("package.json", data);
+        }).then(function() {
+        fs.readFileAsync("gbcc/readme.md", "utf8").then(function(data) {
+           zip.file("readme.md", data);
+        }).then(function() {
+        fs.readFileAsync("gbcc/server.js", "utf8").then(function(data) {
+           zip.file("server.js", data);
+        }).then(function() {
+        zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
+          .pipe(fs.createWriteStream(guid+'.zip'))
+          .on('finish', function () {
+            res.download(guid+'.zip', function() {
+              var fullPath= __dirname + '/'+guid+'.zip';
+              console.log(fullPath);
+              fs.unlink(fullPath, function() {
+                console.log(fullPath + " deleted");
               });
-           });
-         });
+            });
+          });
+        }).catch(function(e) {
+          res.sendfile('index.html');
+          console.error(e.stack);
+        }); }); }); }); }); }); }); }); }); });
       });
    });
 });

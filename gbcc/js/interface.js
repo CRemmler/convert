@@ -80,11 +80,12 @@ Interface = (function() {
     $("#netlogo-title").append(" Room: "+room);
     $(".netlogo-view-container").removeClass("hidden");
     $(".admin-body").css("display","none");
-    $(".netlogo-button:not(.hidden)").addClass("student-button");
+    $(".netlogo-button:not(.hidden)").addClass("student-input");
     $(".netlogo-slider:not(.hidden)").addClass("student-input");
     $(".netlogo-switcher:not(.hidden)").addClass("student-input");
     $(".netlogo-chooser:not(.hidden)").addClass("student-input");
-    $(".netlogo-monitor:not(.hidden)").addClass("student-input");
+    //$(".netlogo-monitor:not(.hidden)").addClass("student-input");
+    $(".netlogo-input-box:not(.hidden)").addClass("student-input");
   }
   
   function displayDisconnectedInterface() {
