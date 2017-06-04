@@ -1,6 +1,5 @@
 var socket;
 var universe;
-var universes = {};
 var commandQueue = [];
 var activityType;
 
@@ -103,33 +102,72 @@ jQuery(document).ready(function() {
   });
   
   // when student clicks on chooser, slider, switch, input-box, slider or button on Student Interface  
-  $(".netlogo-widget-container").on("click", ".student-input", function() {
-    var label, value, id;
-    if ($(this).attr("id").includes("chooser")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" .netlogo-label").text();
-      value = $("#"+id+" option:selected").val();
-    } else if ($(this).attr("id").includes("slider")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" .netlogo-label").text();
-      value = $("#"+id+" input").val();
-    } else if ($(this).attr("id").includes("switch")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" .netlogo-label").text();
-      value = $("#"+id+" input").prop("value");
-    } else if ($(this).attr("id").includes("inputBox")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" .netlogo-label").text();
-      value = $("#"+id+" textarea").val();      
-    } else if ($(this).attr("id").includes("button")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" .netlogo-label").text();
-      value = "";      
+  $(".netlogo-widget-container").on("click", ".student-input", function(e) {
+    var type, label, value, id;
+    var position, offset, size;
+    if ($(this).attr("id").includes("chooser")) { type = "chooser";
+    } else if ($(this).attr("id").includes("slider")) { type = "slider";
+    } else if ($(this).attr("id").includes("switch")) { type = "switch";
+    } else if ($(this).attr("id").includes("inputBox")) { type = "inputBox";    
+    } else if ($(this).attr("id").includes("button")) { type = "button";
+    } else if ($(this).attr("id").includes("view")) { type = "view"; } 
+    id = $(this).attr("id");    
+    switch (type) {
+      case "chooser":
+        label = $("#"+id+" .netlogo-label").text();
+        value = $("#"+id+" option:selected").val();
+        break;
+      case "slider": 
+        label = $("#"+id+" .netlogo-label").text();
+        value = $("#"+id+" input").val();
+        break;
+      case "switch": 
+        label = $("#"+id+" .netlogo-label").text();
+        value = $("#"+id+" input").prop("value");
+        break;
+      case "inputBox": 
+        label = $("#"+id+" .netlogo-label").text();
+        value = $("#"+id+" textarea").val();    
+        break;  
+      case "button":
+        label = $("#"+id+" .netlogo-label").text();
+        value = "";      
+        break;
+      case "view": 
+        label = "view";
+        position = [ e.clientX, e.clientY ];
+        offset = $(this).offset();
+        offset = [ offset.left, offset.top ];
+        pixelDimensions = [ parseFloat($(this).css("width")), parseFloat($(this).css("height")) ];
+        percent = [ ((position[0] - offset[0]) / pixelDimensions[0]), ((position[1] - offset[1]) / pixelDimensions[1]) ]; 
+        patchDimensions = [ universe.model.world.worldwidth, universe.model.world.worldheight ];
+        value = [ (percent[0] * patchDimensions[0]) +  universe.model.world.minpxcor, 
+        universe.model.world.maxpycor - (percent[1] * patchDimensions[1]) ]
+        break;
     } 
-    if (!($(this).attr("id").includes("button"))) {
+    if ((type != "button") && (type != "view")) {
       socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:value});      
     }
-    console.log("send value "+value + " " + label + " " + id);
     socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
+    console.log("send "+value + " " + label + " " + id);
   });
+  
+  
+  // highlight all text in output, when clicked
+  $(".netlogo-output").click(function() { 
+    var sel, range;
+    var el = $(this)[0];
+    if (window.getSelection && document.createRange) { //Browser compatibility
+      sel = window.getSelection();
+      if(sel.toString() == ''){ //no text selection
+         window.setTimeout(function(){
+            range = document.createRange(); //range object
+            range.selectNodeContents(el); //sets Range
+            sel.removeAllRanges(); //remove all ranges from selection
+            sel.addRange(range);//add Range to a Selection.
+        },1);
+      }
+    }
+  });
+  
 });

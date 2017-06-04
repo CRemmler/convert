@@ -18,8 +18,11 @@
 - Run the server with node server.js
 - Go to localhost:3000/
 
+## Hubnet Client Input
+- slider, switch, chooser, input box, button, click on view
+
 ## Known Issues with Conversion
-- Switches, monitors, choosers, sliders on the student interface may not be fully functional.
-- May have to update config.json file to use netlogo-widgets successfully.
+- Buttons on student interface may not be fully functional.
+- May have to update index.html file to create buttons successfully.
 
 Contact: c_remmler@yahoo.com

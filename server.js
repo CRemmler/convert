@@ -177,7 +177,7 @@ app.post('/fileupload',function(req,res){
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);
-        }); }); }); }); }); }); }); }); }); });
+        }); }); }); }); }); }); }); }); }); }); 
       });
    });
 });

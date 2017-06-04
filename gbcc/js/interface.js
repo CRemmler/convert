@@ -47,7 +47,6 @@ Interface = (function() {
     " border:1px solid black; position: absolute; left: 40px; top: 137px; width: 238px; height: 193px;"+
     " padding:5px'></div>"
     $("body").append(widget);
-
     for (var i=0; i<rooms.length; i++) {
       // a room button
       index++;
@@ -86,6 +85,7 @@ Interface = (function() {
     $(".netlogo-chooser:not(.hidden)").addClass("student-input");
     //$(".netlogo-monitor:not(.hidden)").addClass("student-input");
     $(".netlogo-input-box:not(.hidden)").addClass("student-input");
+    $(".netlogo-canvas:not(.hidden)").addClass("student-input").attr("id","student-view");
   }
   
   function displayDisconnectedInterface() {
