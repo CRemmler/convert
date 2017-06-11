@@ -12,7 +12,7 @@ app.use(express.static(__dirname));
 app.get('/', function(req, res){
 	res.sendfile('index.html');
 });
-
+i
 var activityType = ((config.interfaceJs.teacherComponents.componentRange[0] === config.interfaceJs.studentComponents.componentRange[0])
   && (config.interfaceJs.teacherComponents.componentRange[1] === config.interfaceJs.studentComponents.componentRange[1])) ?
 	"gbcc" : "hubnet";
@@ -29,9 +29,7 @@ io.on('connection', function(socket){
 		var myTimer = setInterval(function() {
 			for (var key in roomData) {
 				if (socket) {
-					socket.to(key+"-student").emit("send update", {turtles: roomData[key].turtleUpdates, patches: roomData[key].patchUpdates});	
-					roomData[key].turtleUpdates = {};
-					roomData[key].patchUpdates = {};
+					socket.to(key+"-student").emit("send update", {turtles: roomData[key].turtles, patches: roomData[key].patches});	
 				}
 			}
 		}, 250);
@@ -47,35 +45,32 @@ io.on('connection', function(socket){
 		var myUserType, myUserId, myTurtleId;
 		socket.leave("login");
 		if (data.room === "admin") {
-			socket.emit("display admin", {roomData: getRoomData()});
+			socket.emit("display admin", {roomData: getAdminData()});
 		} else {
 			// if user is first to enter a room, and only one room exists, then enable the timer
 			if (Object.keys(roomData).length === 0) { 
 				// if teacher and student have different interfaces (hubnet, not gbcc)
-				if (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.studentComponents.componentRange) {
-					enableTimer();
-				} 
+				if (activityType === "hubnet") { enableTimer(); } 
 			}
 			// declare myRoom
 			socket.myRoom = data.room;
 			var myRoom = socket.myRoom;
 			if (!roomData[myRoom]) {
 				roomData[myRoom] = {};
-				roomData[myRoom].teacherInRoom = false;
 				roomData[myRoom].turtles = {};
 				roomData[myRoom].patches = {};
-				roomData[myRoom].turtleUpdates = {};
-				roomData[myRoom].patchUpdates = {};
 				roomData[myRoom].turtleDict = {};
 				roomData[myRoom].userIdDict = {};
 				roomData[myRoom].userData = {};
+				roomData[myRoom].canvasOrder = [];
 			}
 			// declare myUserType, first user in is a teacher, rest are students
-			socket.myUserType = (!roomData[myRoom].teacherInRoom) ? "teacher" : "student";
+			socket.myUserType = (countUsers(myRoom) === 0) ? "teacher" : "student";
 			myUserType = socket.myUserType;
 			// declare myUserId
 			myUserId = socket.id;
 			roomData[myRoom].userData[myUserId] = {};
+			roomData[myRoom].userData[myUserId].exists = true;
 			// send settings to client
 			socket.emit("save settings", {userType: myUserType, userId: myUserId});
 			// join myRoom
@@ -86,7 +81,6 @@ io.on('connection', function(socket){
 				// send the teacher a teacher interface
 				socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});
 				// remember that there is already a teacher in room
-				roomData[myRoom].teacherInRoom = true;
 				roomData[myRoom].userIdDict["teacher"] = myUserId;
 				//send to all students on intro page
 				rooms = [];
@@ -103,14 +97,12 @@ io.on('connection', function(socket){
 					socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});				
 					var dataObject
 					if (roomData[myRoom].userData != {}) {
-						
-						for (var k in roomData[myRoom].userData) {
-							//console.log(roomData[myRoom].userData[k]["canvas"]);
-							if (roomData[myRoom].userData[k]["canvas"] != undefined) {
+						for (var j=0; j < roomData[myRoom].canvasOrder.length; j++) {
+							if (roomData[myRoom].userData[roomData[myRoom].canvasOrder[j]]["canvas"] != undefined) {
 								dataObject = {
-									hubnetMessageSource: k,
+									hubnetMessageSource: roomData[myRoom].canvasOrder[j],
 									hubnetMessageTag: "canvas",
-									hubnetMessage: roomData[myRoom].userData[k]["canvas"],
+									hubnetMessage: roomData[myRoom].userData[roomData[myRoom].canvasOrder[j]]["canvas"],
 									components: config.clientJs.reporterComponents,
 									userId: myUserId,
 									activityType: activityType
@@ -119,7 +111,6 @@ io.on('connection', function(socket){
 							}
 						}
 					}
-				
 				}
 			}
 		}
@@ -142,13 +133,9 @@ io.on('connection', function(socket){
 				roomData[myRoom].userIdDict[turtleId] = userId;	
 				roomData[myRoom].turtles[turtleId] = {};
 			}
-			if (roomData[myRoom].turtleUpdates[turtleId] === undefined) {		
-				roomData[myRoom].turtleUpdates[turtleId] = {};
-			} 
 			if (Object.keys(turtle).length > 0) {
 				for (var attribute in turtle) {
 					roomData[myRoom].turtles[turtleId][attribute] = turtle[attribute];
-					roomData[myRoom].turtleUpdates[turtleId][attribute] = turtle[attribute];
 				}
 			}
 		}
@@ -159,13 +146,9 @@ io.on('connection', function(socket){
 			if (roomData[myRoom].patches[patchId] === undefined) {
 				roomData[myRoom].patches[patchId] = {};
 			} 
-			if (roomData[myRoom].patchUpdates[patchId] === undefined) {
-				roomData[myRoom].patchUpdates[patchId] = {};
-			} 
 			if (Object.keys(patch).length > 0) {
 				for (var attribute in patch) {
 					roomData[myRoom].patches[patchId][attribute] = patch[attribute];
-					roomData[myRoom].patchUpdates[patchId][attribute] = patch[attribute];
 				}
 			}
 		}
@@ -187,23 +170,28 @@ io.on('connection', function(socket){
 		var myRoom = socket.myRoom;
 		var myUserId = socket.id;
 		var destination = data.hubnetMessageSource;
-		if (destination === "server") {
-			roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
-		} else {
-			var dataObject = {
-				hubnetMessageSource: myUserId,
-				hubnetMessageTag: data.hubnetMessageTag,
-				hubnetMessage: data.hubnetMessage,
-				components: config.clientJs.reporterComponents,
-				userId: myUserId,
-				activityType: activityType
-			};
-		 	if (destination === "all-users"){
-				socket.to(myRoom+"-teacher").emit("display reporter", dataObject);
-				socket.to(myRoom+"-student").emit("display reporter", dataObject);
-				socket.emit("display reporter", dataObject);
+			if (roomData[myRoom].userData[myUserId]) {
+			if (( data.hubnetMessageTag === "canvas") && (roomData[myRoom].userData[myUserId]["canvas"] === undefined)) {
+				roomData[myRoom].canvasOrder.push(myUserId);
+			}
+			if (destination === "server") {
+				roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
 			} else {
-				io.to(destination).emit("display reporter", dataObject);
+				var dataObject = {
+					hubnetMessageSource: myUserId,
+					hubnetMessageTag: data.hubnetMessageTag,
+					hubnetMessage: data.hubnetMessage,
+					components: config.clientJs.reporterComponents,
+					userId: myUserId,
+					activityType: activityType
+				};
+			 	if (destination === "all-users"){
+					socket.to(myRoom+"-teacher").emit("display reporter", dataObject);
+					socket.to(myRoom+"-student").emit("display reporter", dataObject);
+					socket.emit("display reporter", dataObject);
+				} else {
+					io.to(destination).emit("display reporter", dataObject);
+				}
 			}
 		}
 	});
@@ -236,38 +224,27 @@ io.on('connection', function(socket){
 		var myRoom = socket.myRoom;
 		var myTurtleId = socket.myTurtleId;
 		var myUserId = socket.id;
+		if (roomData[myRoom] != undefined) {
+			roomData[myRoom].userData[myUserId].exists = false;
+		}
 		if (socket.myUserType === "teacher") {
-			// if it's not a flat model...
-			if (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.teacherComponents.componentRange) {
+			if (activityType === "hubnet") {
 				clearRoom(myRoom);
 				disableTimer();
 			} else {
-				delete roomData[myRoom].userData[myUserId];
-				if (Object.keys(roomData[myRoom].userData).length === 0) { 
-					delete roomData[myRoom]; 
-				}				
+				if (countUsers(myRoom) === 0) {	delete roomData[myRoom]; }	
 			}
 		} else {
 			if (roomData[myRoom] != undefined) {
 				var myTurtleId = roomData[myRoom].turtleDict[myUserId];
-				var updateTurtles = {};
 				var turtle = {};
 				turtle.who = myTurtleId;
-				updateTurtles[myTurtleId] = turtle;
 				socket.to(myRoom+"-teacher").emit("execute command", {
 					hubnetMessageSource: myUserId, 
 					hubnetMessageTag: "hubnet-exit-message", 
 					hubnetMessage: ""
 				});
-				delete roomData[myRoom].userData[myUserId];
-				delete roomData[myRoom].turtles[myTurtleId];
-				if (config.interfaceJs.teacherComponents.componentRange != config.interfaceJs.teacherComponents.componentRange) {
-					if (roomData[myRoom].turtles === {}) { delete roomData[myRoom]; }
-				} else {
-					if (Object.keys(roomData[myRoom].userData).length === 0) { 
-						delete roomData[myRoom]; 
-					}				
-				}
+				if (countUsers(myRoom) === 0) { delete roomData[myRoom];}
 				if (Object.keys(roomData).length === 0) { disableTimer();}
 			}
 		}
@@ -282,15 +259,8 @@ function clearRoom(roomName) {
 	var myRoom = roomName;
 	var clientList = [];
 	if (roomData[myRoom]) {
-		// if teacher and student have different interfaces (hubnet, not gbcc)
-		if (config.interfaceJs.teacherComponents.componentRange === config.interfaceJs.teacherComponents.componentRange) {
-			for (var key in roomData[myRoom].userData) {
-				clientList.push(key);
-			}
-		} else {
-			for (var key in roomData[myRoom].userIdDict) {
-				clientList.push(roomData[myRoom].userIdDict[key]);
-			}			
+		for (var key in roomData[myRoom].userData) {
+			clientList.push(key);
 		}
 		for (var i=0; i<clientList.length; i++) {
 			if (io.sockets.sockets[clientList[i]]) {
@@ -302,24 +272,22 @@ function clearRoom(roomName) {
 	}
 }
 
-function getRoomData() {
+function countUsers(roomName) {
+	var users = 0;
+	if (roomData[roomName]) {
+		for (var key in roomData[roomName].userData) {
+			if (roomData[roomName].userData[key].exists) { users++; }
+		}
+	}
+	return users;
+}
+
+function getAdminData() {
 	var displayData = "";
-	var buttonAction;
-		displayData = displayData + "<hr>Any rooms?";
+	displayData = displayData + "<hr>Any rooms?";
 	for (var roomKey in roomData) {
 		displayData = displayData + "<hr>Which room? " + roomKey;
-		displayData = displayData + "<br> Is there a teacher? ";
-		displayData = roomData[roomKey].teacherInRoom ? displayData + " yes": displayData + " no";
-		displayData = displayData + "<br> Students?";
-		if (roomData[roomKey].turtles != {}) {
-			for (var turtleKey in roomData[roomKey].turtles) {
-				var turtle = roomData[roomKey].turtles[turtleKey];
-				if ((turtle.WHO != "-1") && (turtle.BREED === "STUDENTS")) {
-					displayData = displayData + "<br>";
-					displayData = displayData + "Turtle " + turtle.WHO + " with userId " + turtle.USERID;
-				}
-			}
-		}
+		displayData = displayData + "<br>How many users?" + (countUsers(roomKey));
 		displayData = displayData + "<br><button onclick=Interface.clearRoom('"+roomKey+"')>Clear Room</button>";
 	}
 	return displayData;

@@ -23,7 +23,6 @@ app.post('/fileupload',function(req,res){
      var indexFile;
      var loginWidgerRange, studentWidgetRange, teacherWidgetRange;
      var widgetList = [];
-     var inputComponentList = [];
      var reporterComponentList = [];
      fs.readFileAsync(nlogoFileName, "utf8").then(function(data) {
         var array = data.toString().split("\n");
@@ -37,7 +36,6 @@ app.post('/fileupload',function(req,res){
         var label;
         var widgets = ["BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUTBOX", "MONITOR", "OUTPUT", "TEXTBOX", "VIEW", "GRAPHICS-WINDOW"];
         var viewWidgets = ["VIEW", "GRAPHICS-WINDOW"];
-        // input widgets are slider, switch, reporter widgets are monitor
         for(i in array) {
           nlogoFile = nlogoFile + array[i] + "\n";
           if (arrayIndex === 1) { if (widgets.indexOf(array[i]) > -1) { numTeacherWidgets++; } }
@@ -49,16 +47,16 @@ app.post('/fileupload',function(req,res){
                   widget = widget.substr(0,widget.lastIndexOf("NIL"))+"NIL\nNIL\nNIL\n"+widget.lastIndexOf("NIL")+"\n\n";
                   break;
                 case "SLIDER": 
-                  inputComponentList.push([label, "netlogo-slider-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  reporterComponentList.push([label, "#netlogo-slider-"+(numTeacherWidgets+numStudentWidgets - 2)]);
                   break;
                 case "SWITCH": 
-                  inputComponentList.push([label, "netlogo-switch-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  reporterComponentList.push([label, "#netlogo-switch-"+(numTeacherWidgets+numStudentWidgets - 2)]);
                   break;
                 case "CHOOSER": 
-                  inputComponentList.push([label, "netlogo-chooser-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  reporterComponentList.push([label, "#netlogo-chooser-"+(numTeacherWidgets+numStudentWidgets - 2)]);
                   break;
                 case "INPUTBOX": 
-                  inputComponentList.push([label, "netlogo-inputBox-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  reporterComponentList.push([label, "#netlogo-inputBox-"+(numTeacherWidgets+numStudentWidgets - 2)]);
                   break;
                 case "MONITOR": 
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
@@ -66,7 +64,7 @@ app.post('/fileupload',function(req,res){
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
                   widget = widget+'\n0\n1\n11\n\n';
-                  reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)+" output"]);
+                  reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)]);
                   break;
                 case "OUTPUT": break;
                 case "TEXTBOX": break;
@@ -117,12 +115,6 @@ app.post('/fileupload',function(req,res){
              for (var j=0; j<reporterComponentList.length; j++) {
                configFile = configFile + '       "'+reporterComponentList[j][0]+'": "'+reporterComponentList[j][1]+'"';
                configFile = (j+1 != reporterComponentList.length) ? configFile +',\n' : configFile +'\n';
-             }
-           }
-           if (array[i].includes("inputComponents")) {
-             for (var j=0; j<inputComponentList.length; j++) {
-               configFile = configFile + '       "'+inputComponentList[j][0]+'": "'+inputComponentList[j][1]+'"';
-               configFile = (j+1 != inputComponentList.length) ? configFile +',\n' : configFile +'\n';
              }
            }
          }

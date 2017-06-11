@@ -66,10 +66,33 @@ jQuery(document).ready(function() {
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
-      //console.log(data.components[data.hubnetMessageTag]);
       if (activityType === "hubnet") {
-        // send it to reporters
-        $(data.components[data.hubnetMessageTag]).val(data.hubnetMessage);
+        var id = data.components[data.hubnetMessageTag];
+        var type;
+        if (id.includes("chooser")) { type = "chooser";
+        } else if (id.includes("slider")) { type = "slider";
+        } else if (id.includes("switch")) { type = "switch";
+        } else if (id.includes("inputBox")) { type = "inputBox";    
+        } else if (id.includes("button")) { type = "button";
+        } else if (id.includes("view")) { type = "view"; 
+        } else if (id.includes("monitor")) { type = "monitor"; } 
+        switch (type) {
+          case "chooser":
+            value = $(id+" option:selected").val(data.hubnetMessage);
+            break;
+          case "slider": 
+            value = $(id+" input").val(data.hubnetMessage);
+            break;
+          case "switch": 
+            value = $(id+" input").prop("value", data.hubnetMessage);
+            break;
+          case "inputBox": 
+            value = $(id+" textarea").val(data.hubnetMessage);    
+            break;  
+          case "monitor": 
+            value = $(id +" output").val(data.hubnetMessage);     
+            break;  
+        }
       } else {
         // save it in world
         switch (data.hubnetMessageTag) {
@@ -149,7 +172,6 @@ jQuery(document).ready(function() {
       socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:value});      
     }
     socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
-    console.log("send "+value + " " + label + " " + id);
   });
   
   
