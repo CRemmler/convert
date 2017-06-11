@@ -12,7 +12,7 @@ app.use(express.static(__dirname));
 app.get('/', function(req, res){
 	res.sendfile('index.html');
 });
-i
+
 var activityType = ((config.interfaceJs.teacherComponents.componentRange[0] === config.interfaceJs.studentComponents.componentRange[0])
   && (config.interfaceJs.teacherComponents.componentRange[1] === config.interfaceJs.studentComponents.componentRange[1])) ?
 	"gbcc" : "hubnet";
@@ -42,14 +42,13 @@ io.on('connection', function(socket){
 	
 	// user enters room
 	socket.on("enter room", function(data) {
-		var myUserType, myUserId, myTurtleId;
+		var myUserType, myUserId;
 		socket.leave("login");
 		if (data.room === "admin") {
 			socket.emit("display admin", {roomData: getAdminData()});
 		} else {
 			// if user is first to enter a room, and only one room exists, then enable the timer
 			if (Object.keys(roomData).length === 0) { 
-				// if teacher and student have different interfaces (hubnet, not gbcc)
 				if (activityType === "hubnet") { enableTimer(); } 
 			}
 			// declare myRoom
@@ -59,8 +58,6 @@ io.on('connection', function(socket){
 				roomData[myRoom] = {};
 				roomData[myRoom].turtles = {};
 				roomData[myRoom].patches = {};
-				roomData[myRoom].turtleDict = {};
-				roomData[myRoom].userIdDict = {};
 				roomData[myRoom].userData = {};
 				roomData[myRoom].canvasOrder = [];
 			}
@@ -76,12 +73,9 @@ io.on('connection', function(socket){
 			// join myRoom
 			socket.join(myRoom+"-"+myUserType);
 			// tell teacher or student to display their interface
-			//socket.emit("display interface", {userType: socket.myUserType, room: myRoom});
 			if (myUserType === "teacher") {
 				// send the teacher a teacher interface
 				socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});
-				// remember that there is already a teacher in room
-				roomData[myRoom].userIdDict["teacher"] = myUserId;
 				//send to all students on intro page
 				rooms = [];
 				for (var key in roomData) { rooms.push(key); }
@@ -95,8 +89,9 @@ io.on('connection', function(socket){
 				} else {
 					// it's gbcc, so send student a teacher interface
 					socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});				
-					var dataObject
+					var dataObject;
 					if (roomData[myRoom].userData != {}) {
+						console.log("loop through canvases "+roomData[myRoom].canvasOrder.length);
 						for (var j=0; j < roomData[myRoom].canvasOrder.length; j++) {
 							if (roomData[myRoom].userData[roomData[myRoom].canvasOrder[j]]["canvas"] != undefined) {
 								dataObject = {
@@ -107,6 +102,7 @@ io.on('connection', function(socket){
 									userId: myUserId,
 									activityType: activityType
 								};
+								console.log("display reporter");
 								socket.emit("display reporter", dataObject);
 							}
 						}
@@ -119,7 +115,6 @@ io.on('connection', function(socket){
 	// store updates to world
 	socket.on("update", function(data) {
 		var myRoom = socket.myRoom;
-		var userId;
 		var turtleId, turtle;
 		var patchId, patch;	
 		for (var key in data.turtles) 
@@ -127,10 +122,6 @@ io.on('connection', function(socket){
 			turtle = data.turtles[key];
 			turtleId = key;
 			if (roomData[myRoom].turtles[turtleId] === undefined) {
-				// save userId and turtleId in dicts, for new student
-				userId = turtle.USERID;
-				roomData[myRoom].turtleDict[userId] = turtleId;
-				roomData[myRoom].userIdDict[turtleId] = userId;	
 				roomData[myRoom].turtles[turtleId] = {};
 			}
 			if (Object.keys(turtle).length > 0) {
@@ -170,11 +161,15 @@ io.on('connection', function(socket){
 		var myRoom = socket.myRoom;
 		var myUserId = socket.id;
 		var destination = data.hubnetMessageSource;
-			if (roomData[myRoom].userData[myUserId]) {
+		if (roomData[myRoom].userData[myUserId]) {
+			console.log("send reporter " + data.hubnetMessageTag);
 			if (( data.hubnetMessageTag === "canvas") && (roomData[myRoom].userData[myUserId]["canvas"] === undefined)) {
 				roomData[myRoom].canvasOrder.push(myUserId);
 			}
 			if (destination === "server") {
+				if (data.hubnetMessageTag === "code-example") {
+					console.log("code-example is "+data.hubnetMessage +" for "+myUserId);
+				}
 				roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
 			} else {
 				var dataObject = {
@@ -186,6 +181,8 @@ io.on('connection', function(socket){
 					activityType: activityType
 				};
 			 	if (destination === "all-users"){
+					roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
+					dataObject.hubnetMessage = data.hubnetMessage;
 					socket.to(myRoom+"-teacher").emit("display reporter", dataObject);
 					socket.to(myRoom+"-student").emit("display reporter", dataObject);
 					socket.emit("display reporter", dataObject);
@@ -196,6 +193,11 @@ io.on('connection', function(socket){
 		}
 	});
 	
+	// pass reporter from student to server
+	socket.on("get it", function() {
+		socket.emit("got it");
+	});
+
 	// pass reporter from student to server
 	socket.on("get reporter", function(data) {
 		var myRoom = socket.myRoom;
@@ -222,7 +224,6 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function () {
 		//clearInterval(myTimer);
 		var myRoom = socket.myRoom;
-		var myTurtleId = socket.myTurtleId;
 		var myUserId = socket.id;
 		if (roomData[myRoom] != undefined) {
 			roomData[myRoom].userData[myUserId].exists = false;
@@ -236,9 +237,6 @@ io.on('connection', function(socket){
 			}
 		} else {
 			if (roomData[myRoom] != undefined) {
-				var myTurtleId = roomData[myRoom].turtleDict[myUserId];
-				var turtle = {};
-				turtle.who = myTurtleId;
 				socket.to(myRoom+"-teacher").emit("execute command", {
 					hubnetMessageSource: myUserId, 
 					hubnetMessageTag: "hubnet-exit-message", 

@@ -1,5 +1,6 @@
 var socket;
 var universe;
+var universes = {};
 var commandQueue = [];
 var activityType;
 
@@ -25,8 +26,7 @@ jQuery(document).ready(function() {
         Interface.showStudent(data.room, data.components);
         break;
       case "login":
-        Interface.showLogin(data.rooms, data.components, data.activityType);
-        activityType = data.activityType;
+        Interface.showLogin(data.rooms, data.components, activityType);
         break;
       case "disconnected":
         Interface.showDisconnected();
@@ -51,48 +51,28 @@ jQuery(document).ready(function() {
 
   // students display reporters
   socket.on("display reporter", function(data) {
+    console.log("display reporter " + data.hubnetMessageTag);
     if (data.hubnetMessageTag === "canvas") {
+      console.log("display canvas");
       if ($("#image-"+data.hubnetMessageSource).length === 0) {
         var canvasImg = new Image();
         canvasImg.id = "image-" + data.hubnetMessageSource;
         canvasImg.src = data.hubnetMessage;
         canvasImg.userId = data.hubnetMessageSource;
         canvasImg.onclick = function() {
-          world.hubnetManager.setGbccCanvasSource(canvasImg.userId);
-          world.hubnetManager.gbccRunCode("canvas-click");
+          //world.hubnetManager.setGbccCanvasSource(canvasImg.userId);
+          console.log("clicked on userId "+canvasImg.userId);
+          world.hubnetManager.gbccRunCode('gbcc-gallery-click "'+canvasImg.userId+'"');
         };  
         $(".netlogo-gallery").append(canvasImg);
       } else {        
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
+      //console.log(data.components[data.hubnetMessageTag]);
       if (activityType === "hubnet") {
-        var id = data.components[data.hubnetMessageTag];
-        var type;
-        if (id.includes("chooser")) { type = "chooser";
-        } else if (id.includes("slider")) { type = "slider";
-        } else if (id.includes("switch")) { type = "switch";
-        } else if (id.includes("inputBox")) { type = "inputBox";    
-        } else if (id.includes("button")) { type = "button";
-        } else if (id.includes("view")) { type = "view"; 
-        } else if (id.includes("monitor")) { type = "monitor"; } 
-        switch (type) {
-          case "chooser":
-            value = $(id+" option:selected").val(data.hubnetMessage);
-            break;
-          case "slider": 
-            value = $(id+" input").val(data.hubnetMessage);
-            break;
-          case "switch": 
-            value = $(id+" input").prop("value", data.hubnetMessage);
-            break;
-          case "inputBox": 
-            value = $(id+" textarea").val(data.hubnetMessage);    
-            break;  
-          case "monitor": 
-            value = $(id +" output").val(data.hubnetMessage);     
-            break;  
-        }
+        // send it to reporters
+        $(data.components[data.hubnetMessageTag]).val(data.hubnetMessage);
       } else {
         // save it in world
         switch (data.hubnetMessageTag) {
@@ -123,7 +103,7 @@ jQuery(document).ready(function() {
   socket.on("teacher disconnect", function(data) {
     Interface.showDisconnected();
   });
-  
+    
   // when student clicks on chooser, slider, switch, input-box, slider or button on Student Interface  
   $(".netlogo-widget-container").on("click", ".student-input", function(e) {
     var type, label, value, id;
@@ -173,8 +153,8 @@ jQuery(document).ready(function() {
     }
     socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
   });
-  
-  
+
+
   // highlight all text in output, when clicked
   $(".netlogo-output").click(function() { 
     var sel, range;
@@ -191,5 +171,5 @@ jQuery(document).ready(function() {
       }
     }
   });
-  
+
 });

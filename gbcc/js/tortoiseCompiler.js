@@ -16807,11 +16807,17 @@
             })),
             eDag = (new E).f("EVAL-CMD", R(function() {
                 return (new KNam).d()
+            })),
+            eDak = (new E).f("GBCC-GET-FROM-USER", R(function() {
+                return (new KNas).d()
+            })),
+            eDal = (new E).f("GBCC-GET", R(function() {
+                return (new KNat).d()
             }));
     
         this.Sj = kf(Tc, (new x).g([ce, Xf, te, nf, Pd, Bd, Pe, of , Qe, Uc, Yf, id, Qd, Vc, pf, Rd, Sd, Re, Se, Dg, de, Te,
             qf, ih, ee, wc, Cd, rf, ue, Eg, Fg, Gg, Hg, jh, ve, fe, Ue, kh, lh, Kh, ii, ji, Ig, Lh, mh, Jg, Zf, Mh, Kg, Ve, sf, ki, tf, $f, nh, uf, Td, oh, vf, ph, Lg, We, ag, wf, xf, Mg, yf, Ng, Og, Pg, pj, hk, qj, ik, vl, wl, rj, xl, Hi, Im, ir, jr, kr, yl, lr, zl, jk, mr, nr, kk, sj, Al, lk, Ii, Jm, mk, or, nk, ok, pr, Km, qr, li, qh, pk, qk, rr, sr, XH, Ky, YH, ZH, Ly, My, $H, aI, Oy, Ur, $l, Vr, am, Py, cI, tn, Kk, dI, Wr, un, eI, fI, gI, Qy, hI, S8, T8, U8, V8, W8, X8, Y8, Z8, $8, a9, b9, c9, d9, e9, f9, g9, h9, i9, j9, k9, l9, m9, x0, n9, o9, p9, q9, r9, s9, t9, u9, v9, w9, x9, y9, z9, A9, B9, C9, D9, E9, F9, G9, H9, I9, J9, K9, L9, M9, N9, O9, P9, Q9, R9, S9, T9,
-            U9, V9, W9, X9, Y9, Z9, $9, y0, a$, b$, c$, d$, e$, f$, g$, h$, i$, j$, k$, l$, m$, n$, o$, p$, q$, r$, s$, t$, u$, v$, w$, x$, y$, z$, z0, A$, B$, C$, D$, E$, F$, G$, H$, I$, J$, K$, L$, La$, Lb$, Lc$, Ld$, Le$, Lf$, eDag, (new E).f("XOR", R(function() {
+            U9, V9, W9, X9, Y9, Z9, $9, y0, a$, b$, c$, d$, e$, f$, g$, h$, i$, j$, k$, l$, m$, n$, o$, p$, q$, r$, s$, t$, u$, v$, w$, x$, y$, z$, z0, A$, B$, C$, D$, E$, F$, G$, H$, I$, J$, K$, L$, La$, Lb$, Lc$, Ld$, Le$, Lf$, eDag, eDak, eDal, (new E).f("XOR", R(function() {
                 return (new TK).d()
             }))
         ]));
@@ -17372,18 +17378,27 @@
             eDac = (new E).f("HUBNET-SEND", R(function() {
                 return (new KNac).d()
             })),
-            eDad = (new E).f("GBCC-GET", R(function() {
-                return (new KNaj).d()
-            })),
             eDae = (new E).f("GBCC-RUN-CODE", R(function() {
                 return (new KNak).d()
             })),
             eDaf = (new E).f("GBCC-WAIT", R(function() {
                 return (new KNal).d()
+            })),
+            eDag = (new E).f("GBCC-SET-GLOBALS", R(function() {
+                return (new KNao).d()
+            })),
+            eDah = (new E).f("GBCC-GET-GLOBALS-FROM-USER", R(function() {
+                return (new KNan).d()
+            })),
+            eDai = (new E).f("GBCC-BROADCAST", R(function() {
+                return (new KNap).d()
+            })),
+            eDaj = (new E).f("GBCC-SET", R(function() {
+                return (new KNaq).d()
             }));
         this.zj = kf(M$, (new x).g([N$,
             O$, P$, Q$, R$, S$, T$, U$, V$, W$, X$, Y$, Z$, $$, aaa, baa, A0, caa, daa, eaa, faa, gaa, haa, iaa, jaa, kaa, laa, maa, naa, oaa, paa, qaa, raa, saa, taa, uaa, vaa, waa, xaa, yaa, zaa, Aaa, Baa, Caa, Daa, Eaa, Faa, Gaa, Haa, Iaa, B0, Jaa, KAa, LAa, MAa, NAa, OAa, PAa, QAa, RAa, SAa, TAa, UAa, VAa, WAa, XAa, YAa, ZAa, $Aa, aBa, bBa, cBa, dBa, eBa, fBa, gBa, hBa, iBa, jBa, kBa, lBa, mBa, nBa, oBa, pBa, qBa, rBa, sBa, tBa, uBa, vBa, wBa, xBa, yBa, zBa, ABa, BBa, CBa, DBa, EBa, FBa, GBa, HBa, IBa, JBa, KBa, LBa, MBa, NBa, OBa, PBa, QBa, RBa, SBa, TBa, UBa, VBa, WBa, XBa, YBa, ZBa, $Ba, aCa, bCa, cCa, dCa, eCa, fCa, gCa, hCa,
-            iCa, jCa, kCa, lCa, mCa, nCa, oCa, pCa, qCa, rCa, sCa, tCa, uCa, vCa, wCa, xCa, yCa, zCa, ACa, BCa, CCa, DCa, ECa, FCa, GCa, HCa, ICa, JCa, KCa, LCa, MCa, NCa, OCa, PCa, QCa, RCa, SCa, TCa, UCa, VCa, WCa, XCa, YCa, ZCa, $Ca, aDa, bDa, cDa, dDa, eDa, eDab, eDac, eDad, eDae, eDaf, (new E).f("WRITE", R(function() {
+            iCa, jCa, kCa, lCa, mCa, nCa, oCa, pCa, qCa, rCa, sCa, tCa, uCa, vCa, wCa, xCa, yCa, zCa, ACa, BCa, CCa, DCa, ECa, FCa, GCa, HCa, ICa, JCa, KCa, LCa, MCa, NCa, OCa, PCa, QCa, RCa, SCa, TCa, UCa, VCa, WCa, XCa, YCa, ZCa, $Ca, aDa, bDa, cDa, dDa, eDa, eDab, eDac, eDae, eDaf, eDag, eDah, eDai, eDaj, (new E).f("WRITE", R(function() {
                 return (new LN).d()
             }))
         ]));
@@ -18279,20 +18294,36 @@
             YSk = (new E).f("etc._hubnetmessagetag", YSj),
             YSl = F(t(), (new x).g(["HUBNET-MESSAGE-SOURCE"])),
             YSm = (new E).f("etc._hubnetmessagesource", YSl),
-            XSn = F(t(), (new x).g(["GBCC-GET"])),
-            YSo = (new E).f("etc._gbccget", XSn),
             YSp = F(t(), (new x).g(["GBCC-RUN-CODE"])),
             YSq = (new E).f("etc._gbccruncode", YSp),
             YSr = F(t(), (new x).g(["GBCC-WAIT"])),
-            YSs = (new E).f("etc._gbccWait", YSr),
+            YSs = (new E).f("etc._gbccwait", YSr),
             YSt = F(t(), (new x).g(["EVAL-CMD"])),
-            YSu = (new E).f("etc._gbccWait", YSt);
+            YSu = (new E).f("etc._gbccwait", YSt),
+            
+            YSv = F(t(), (new x).g(["GBCC-SET-GLOBALS"])),
+            YSw = (new E).f("etc._gbccsetglobals", YSv),
+            
+            YSx = F(t(), (new x).g(["GBCC-GET-GLOBALS-FROM-USER"])),
+            YSy = (new E).f("etc._gbccgetglobalsfromuser", YSx),
+            
+            YSz = F(t(), (new x).g(["GBCC-BROADCAST"])),
+            YSaa = (new E).f("etc._gbccbroadcast", YSz),
+            
+            YSab = F(t(), (new x).g(["GBCC-SET"])),
+            YSac = (new E).f("etc._gbccSet", YSab),
+            
+            YSad = F(t(), (new x).g(["GBCC-GET-FROM-USER"])),
+            YSae = (new E).f("etc._gbccGetFromUser", YSad),
+            
+            YSaf = F(t(), (new x).g(["GBCC-GET"])),
+            YSag = (new E).f("etc._gbccGet", YSaf);
             
         this.Aia = kf(fDa, (new x).g([hDa, jDa, lDa, nDa, pDa,
             rDa, tDa, vDa, xDa, zDa, BDa, DDa, FDa, HDa, JDa, LDa, NDa, PDa, RDa, TDa, VDa, XDa, ZDa, aEa, cEa, eEa, gEa, iEa, kEa, mEa, oEa, qEa, sEa, uEa, wEa, yEa, AEa, CEa, EEa, GEa, IEa, KEa, MEa, OEa, QEa, SEa, UEa, WEa, YEa, $Ea, bFa, dFa, fFa, hFa, jFa, lFa, nFa, pFa, rFa, tFa, vFa, xFa, zFa, BFa, DFa, FFa, HFa, JFa, LFa, NFa, PFa, RFa, TFa, VFa, XFa, ZFa, aGa, cGa, eGa, gGa, iGa, kGa, mGa, oGa, qGa, sGa, uGa, wGa, yGa, AGa, CGa, EGa, GGa, IGa, KGa, MGa, OGa, QGa, SGa, UGa, WGa, YGa, $Ga, bHa, dHa, fHa, hHa, jHa, lHa, nHa, pHa, rHa, tHa, vHa, xHa, zHa, BHa, DHa, FHa, HHa, JHa, LHa, NHa, PHa, RHa, THa, VHa, XHa, ZHa, aIa, cIa,
             eIa, gIa, iIa, kIa, mIa, oIa, qIa, sIa, uIa, wIa, yIa, AIa, CIa, EIa, GIa, IIa, KIa, MIa, OIa, QIa, SIa, UIa, WIa, YIa, $Ia, bJa, dJa, fJa, hJa, jJa, lJa, nJa, pJa, rJa, tJa, vJa, xJa, zJa, BJa, DJa, FJa, HJa, JJa, LJa, NJa, PJa, RJa, TJa, VJa, XJa, ZJa, aKa, cKa, eKa, gKa, iKa, kKa, mKa, oKa, qKa, sKa, uKa, wKa, yKa, AKa, CKa, EKa, GKa, IKa, KKa, MKa, OKa, QKa, SKa, UKa, WKa, YKa, $Ka, bLa, dLa, fLa, hLa, jLa, lLa, nLa, pLa, rLa, tLa, vLa, xLa, zLa, BLa, DLa, FLa, HLa, JLa, LLa, NLa, PLa, RLa, TLa, VLa, XLa, ZLa, aMa, cMa, eMa, gMa, iMa, kMa, mMa, oMa, qMa, sMa, uMa, wMa, yMa, AMa, CMa, EMa, GMa, IMa, KMa, MMa, OMa, QMa,
             SMa, UMa, WMa, YMa, $Ma, bNa, dNa, fNa, hNa, jNa, lNa, nNa, pNa, rNa, tNa, vNa, xNa, zNa, BNa, DNa, FNa, HNa, JNa, LNa, NNa, PNa, RNa, TNa, VNa, XNa, ZNa, aOa, cOa, eOa, gOa, iOa, kOa, mOa, oOa, qOa, sOa, uOa, wOa, yOa, AOa, COa, EOa, GOa, IOa, KOa, MOa, OOa, QOa, SOa, UOa, WOa, YOa, $Oa, bPa, dPa, fPa, hPa, jPa, lPa, nPa, pPa, rPa, tPa, vPa, xPa, zPa, BPa, DPa, FPa, HPa, JPa, LPa, NPa, PPa, RPa, TPa, VPa, XPa, ZPa, aQa, cQa, eQa, gQa, iQa, kQa, mQa, oQa, qQa, sQa, uQa, wQa, yQa, AQa, CQa, EQa, GQa, IQa, KQa, MQa, OQa, QQa, SQa, UQa, WQa, YQa, $Qa, bRa, dRa, fRa, hRa, jRa, lRa, nRa, pRa, rRa, tRa, vRa, xRa, zRa, BRa, DRa,
-            FRa, HRa, JRa, LRa, NRa, PRa, RRa, TRa, VRa, XRa, ZRa, aSa, cSa, eSa, gSa, iSa, kSa, mSa, oSa, qSa, sSa, uSa, wSa, ySa, ASa, CSa, ESa, GSa, ISa, KSa, MSa, OSa, QSa, SSa, USa, WSa, YSa, YSc, YSe, YSg, YSi, YSk, YSm, YSo, YSq, YSs, YSu
+            FRa, HRa, JRa, LRa, NRa, PRa, RRa, TRa, VRa, XRa, ZRa, aSa, cSa, eSa, gSa, iSa, kSa, mSa, oSa, qSa, sSa, uSa, wSa, ySa, ASa, CSa, ESa, GSa, ISa, KSa, MSa, OSa, QSa, SSa, USa, WSa, YSa, YSc, YSe, YSg, YSi, YSk, YSm, YSq, YSs, YSu, YSw, YSy, YSaa, YSac, YSae, YSag
         ]));
         this.a |= 8;
         return this
@@ -56764,15 +56795,15 @@
         return this
     };
     l.pE = function(a) {
-        return iwa(a) || jwa(a) || kwa(a) || lwa(a) || mwa(a) || nwa(a) || owa(a) || pwa(a) || qwa(a) || rwa(a) || swa(a) || twa(a) || uwa(a) || vwa(a) || wwa(a) || xwa(a) || ywa(a) || zwa(a) || Awa(a) || Bwa(a) || Cwa(a) || Dwa(a) || Ewa(a) || Fwa(a) || Gwa(a) || Hwa(a) || Iwa(a) || Jwa(a) || Kwa(a) || Lwa(a) || Mwa(a) || Nwa(a) || Owa(a) || Pwa(a) || Qwa(a) || Rwa(a) || Swa(a) || Twa(a) || Uwa(a) || Vwa(a) || Wwa(a) || Xwa(a) || Ywa(a) || Zwa(a) || $wa(a) || axa(a) || bxa(a) || cxa(a) || dxa(a) || exa(a) || fxa(a) || gxa(a) || hxa(a) || ixa(a) || ixb(a) || ixc(a) || ixd(a) || ixg(a) || ixe(a) || jxa(a) || kxa(a) || lxa(a) || mxa(a) || nxa(a) || oxa(a) ||
-            pxa(a) || qxa(a) || rxa(a) || sxa(a) || txa(a) || uxa(a) || vxa(a) || wxa(a) || xxa(a) || yxa(a) || zxa(a) || Axa(a) || Bxa(a) || Cxa(a) || Dxa(a) || Exa(a) || Fxa(a)
+        return iwa(a) || jwa(a) || kwa(a) || lwa(a) || mwa(a) || nwa(a) || owa(a) || pwa(a) || qwa(a) || rwa(a) || swa(a) || twa(a) || uwa(a) || vwa(a) || wwa(a) || xwa(a) || ywa(a) || zwa(a) || Awa(a) || Bwa(a) || Cwa(a) || Dwa(a) || Ewa(a) || Fwa(a) || Gwa(a) || Hwa(a) || Iwa(a) || Jwa(a) || Kwa(a) || Lwa(a) || Mwa(a) || Nwa(a) || Owa(a) || Pwa(a) || Qwa(a) || Rwa(a) || Swa(a) || Twa(a) || Uwa(a) || Vwa(a) || Wwa(a) || Xwa(a) || Ywa(a) || Zwa(a) || $wa(a) || axa(a) || bxa(a) || cxa(a) || dxa(a) || exa(a) || fxa(a) || gxa(a) || hxa(a) || ixa(a) || ixb(a) || ixc(a) || ixg(a) || ixe(a) || jxa(a) || kxa(a) || lxa(a) || mxa(a) || nxa(a) || oxa(a) || ixl(a) ||
+            pxa(a) || qxa(a) || rxa(a) || sxa(a) || txa(a) || uxa(a) || vxa(a) || ixk(a)|| wxa(a) || xxa(a) || yxa(a) || zxa(a) || Axa(a) || Bxa(a) || Cxa(a) || Dxa(a) || Exa(a) || Fxa(a)
     };
     l.mC = function(a, c) {
         return iwa(a) ? "PrintPrims.print" : jwa(a) ? "PrintPrims.show(SelfManager.self)" : kwa(a) ? "PrintPrims.type" : lwa(a) ? "PrintPrims.write" : mwa(a) ? "OutputPrims.clear" : nwa(a) ? "OutputPrims.print" : owa(a) ? "OutputPrims.show(SelfManager.self)" : pwa(a) ? "OutputPrims.type" : qwa(a) ? "OutputPrims.write" : rwa(a) ? "SelfManager.self().fd" : swa(a) ? "SelfManager.self().jumpIfAble" : twa(a) ? "SelfManager.self().die" : uwa(a) ? "SelfManager.self().face" : vwa(a) ? "SelfManager.self().faceXY" : wwa(a) ? "SelfManager.self().followMe" :
             xwa(a) ? "SelfManager.self().goHome" : ywa(a) ? "SelfManager.self().moveTo" : zwa(a) ? "SelfManager.self().penManager.lowerPen" : Awa(a) ? "SelfManager.self().penManager.useEraser" : Bwa(a) ? "SelfManager.self().penManager.raisePen" : Cwa(a) ? "SelfManager.self().rideMe" : Dwa(a) ? "SelfManager.self().right" : Ewa(a) ? "SelfManager.self().setXY" : Fwa(a) ? "SelfManager.self().stamp" : Gwa(a) ? "SelfManager.self().stampErase" : Hwa(a) ? "SelfManager.self().tie" : Iwa(a) ? "SelfManager.self().untie" : Jwa(a) ? "SelfManager.self().watchMe" : Kwa(a) ? "plotManager.disableAutoplotting" :
             Lwa(a) ? "plotManager.enableAutoplotting" : Mwa(a) ? "plotManager.clearAllPlots" : Nwa(a) ? "plotManager.clearPlot" : Owa(a) ? "plotManager.createTemporaryPen" : Pwa(a) ? "plotManager.drawHistogramFrom" : Qwa(a) ? "plotManager.lowerPen" : Rwa(a) ? "plotManager.resetPen" : Swa(a) ? "plotManager.raisePen" : Twa(a) ? "plotManager.plotValue" : Uwa(a) ? "plotManager.plotPoint" : Vwa(a) ? "plotManager.setCurrentPen" : Wwa(a) ? "plotManager.setCurrentPlot" : Xwa(a) ? "plotManager.setHistogramBarCount" : Ywa(a) ? "plotManager.setPenColor" : Zwa(a) ? "plotManager.setPenInterval" :
-            $wa(a) ? "plotManager.setPenMode" : axa(a) ? "plotManager.setXRange" : bxa(a) ? "plotManager.setYRange" : cxa(a) ? "plotManager.setupPlots" : dxa(a) ? "plotManager.updatePlots" : exa(a) ? "world.clearAll" : fxa(a) ? "world.clearDrawing" : gxa(a) ? "world.observer.clearCodeGlobals" : hxa(a) ? "world.clearPatches" : ixa(a) ? "world.turtleManager.clearTurtles" : ixb(a) ? "world.hubnetManager.hubnetFetchMessage" : ixc(a) ? "world.hubnetManager.hubnetSend" : jxa(a) ? "world.ticker.clear" : kxa(a) ? "world.linkManager.clear" : lxa(a) ? "world.resize" : mxa(a) ? "world.setPatchSize" : nxa(a) ? "world.ticker.reset" : oxa(a) ? "world.ticker.tick" : pxa(a) ? "world.ticker.tickAdvance" :
-            qxa(a) ? "workspace.timer.reset" : rxa(a) ? "workspace.rng.setSeed" : sxa(a) ? "world.observer.follow" : txa(a) ? "world.observer.ride" : uxa(a) ? "world.observer.watch" : vxa(a) ? "world.observer.resetPerspective" : wxa(a) ? "LayoutManager.layoutSpring" : xxa(a) ? "LayoutManager.layoutCircle" : yxa(a) ? "LayoutManager.layoutRadial" : zxa(a) ? "LayoutManager.layoutTutte" : Axa(a) ? "world.changeTopology" : Bxa(a) ? "Tasks.apply" : Cxa(a) ? "Prims.stdout" : Dxa(a) ? "UserDialogPrims.confirm" : ixd(a) ? "world.hubnetManager.gbccGet" : ixg(a) ? "world.hubnetManager.gbccWait"  : ixe(a) ? "world.hubnetManager.gbccRunCode" : Exa(a) ? "ExportPrims.exportOutput" : Fxa(a) ? "notImplemented('display', undefined)" :
+            $wa(a) ? "plotManager.setPenMode" : axa(a) ? "plotManager.setXRange" : bxa(a) ? "plotManager.setYRange" : cxa(a) ? "plotManager.setupPlots" : dxa(a) ? "plotManager.updatePlots" : exa(a) ? "world.clearAll" : fxa(a) ? "world.clearDrawing" : gxa(a) ? "world.observer.clearCodeGlobals" : hxa(a) ? "world.clearPatches" : ixa(a) ? "world.turtleManager.clearTurtles" : ixb(a) ? "world.hubnetManager.hubnetFetchMessage" : ixi(a) ? "world.hubnetManager.gbccSetGlobals" : ixj(a) ? "world.hubnetManager.gbccGetGlobals"  : ixc(a) ? "world.hubnetManager.hubnetSend" : ixk(a) ? "world.hubnetManager.gbccBroadcast" : ixl(a) ? "world.hubnetManager.gbccSet" : jxa(a) ? "world.ticker.clear" : kxa(a) ? "world.linkManager.clear" : lxa(a) ? "world.resize" : mxa(a) ? "world.setPatchSize" : nxa(a) ? "world.ticker.reset" : oxa(a) ? "world.ticker.tick" : pxa(a) ? "world.ticker.tickAdvance" :
+            qxa(a) ? "workspace.timer.reset" : rxa(a) ? "workspace.rng.setSeed" : sxa(a) ? "world.observer.follow" : txa(a) ? "world.observer.ride" : uxa(a) ? "world.observer.watch" : vxa(a) ? "world.observer.resetPerspective" : wxa(a) ? "LayoutManager.layoutSpring" : xxa(a) ? "LayoutManager.layoutCircle" : yxa(a) ? "LayoutManager.layoutRadial" : zxa(a) ? "LayoutManager.layoutTutte" : Axa(a) ? "world.changeTopology" : Bxa(a) ? "Tasks.apply" : Cxa(a) ? "Prims.stdout" : Dxa(a) ? "UserDialogPrims.confirm" : ixg(a) ? "world.hubnetManager.gbccWait"  : ixe(a) ? "world.hubnetManager.gbccRunCode" : Exa(a) ? "ExportPrims.exportOutput" : Fxa(a) ? "notImplemented('display', undefined)" :
             c.t(a)
     };
     l.cb = function(a) {
@@ -56802,7 +56833,7 @@
     };
     l.gn = function(a) {
         return Gxa(a) || Hxa(a) || Ixa(a) || Jxa(a) || Kxa(a) || Lxa(a) || Mxa(a) || Nxa(a) || Oxa(a) || Pxa(a) || Qxa(a) || Rxa(a) || Sxa(a) || Txa(a) || Uxa(a) || Vxa(a) || Wxa(a) || Xxa(a) || Yxa(a) || Zxa(a) || $xa(a) || aya(a) || bya(a) || cya(a) || dya(a) || eya(a) || fya(a) || gya(a) || hya(a) || iya(a) || jya(a) || kya(a) || lya(a) || mya(a) || nya(a) || oya(a) || pya(a) || qya(a) || rya(a) || sya(a) || tya(a) || uya(a) || vya(a) || wya(a) || xya(a) || yya(a) || zya(a) || Aya(a) || ixh(a) ||  Bya(a) || Cya(a) || Dya(a) || Eya(a) || Fya(a) || Gya(a) || Hya(a) || Iya(a) || Jya(a) || Kya(a) || Lya(a) || Mya(a) ||
-            Nya(a) || Oya(a) || Pya(a) || Qya(a) || Rya(a) || Sya(a) || Tya(a) || Uya(a) || Vya(a) || Wya(a) || Xya(a) || Yya(a) || Zya(a) || $ya(a) || aza(a) || bza(a) || cza(a) || dza(a) || eza(a) || fza(a) || gza(a) || hza(a) || iza(a) || jza(a) || kza(a) || lza(a) || mza(a) || nza(a) || oza(a) || pza(a) || qza(a) || rza(a) || sza(a) || tza(a) || uza(a) || vza(a) || wza(a) || xza(a) || yza(a) || zza(a) || Aza(a) || Bza(a) || Cza(a) || Dza(a) || Eza(a) || Fza(a) || Gza(a) || Hza(a) || Iza(a) || Jza(a) || Kza(a) || Lza(a) || Mza(a) || Nza(a) || Oza(a) || Pza(a) || Qza(a) || Rza(a) || Sza(a) || Tza(a) || Uza(a) || Vza(a) || Wza(a) ||
+            Nya(a) || Oya(a) || Pya(a) || Qya(a) || Rya(a) || Sya(a) || Tya(a) || Uya(a) || Vya(a) || Wya(a) || Xya(a) || Yya(a) || Zya(a) || $ya(a) || aza(a) || bza(a) || cza(a) || dza(a) || eza(a) || fza(a) || gza(a) || hza(a) || iza(a) || jza(a) || kza(a) || lza(a) || mza(a) || nza(a) || oza(a) || pza(a) || qza(a) || rza(a) || sza(a) || tza(a) || uza(a) || vza(a) || wza(a) || ixp(a) || ixq(a) || xza(a) || yza(a) || zza(a) || Aza(a) || Bza(a) || Cza(a) || Dza(a) || Eza(a) || Fza(a) || Gza(a) || Hza(a) || Iza(a) || Jza(a) || Kza(a) || Lza(a) || Mza(a) || Nza(a) || Oza(a) || Pza(a) || Qza(a) || Rza(a) || Sza(a) || Tza(a) || Uza(a) || Vza(a) || Wza(a) ||
             Xza(a) || Yza(a) || Zza(a) || $za(a) || aAa(a) || bAa(a) || cAa(a) || dAa(a) || eAa(a) || fAa(a) || fAb(a) || fAc(a) || fAd(a)
     };
     l.Gm = function(a, c) {
@@ -56813,7 +56844,7 @@
             Sya(a) ? "plotManager.getPlotYMin" : Tya(a) ? "MousePrims.isDown" : Uya(a) ? "MousePrims.isInside" : Vya(a) ? "MousePrims.getX" : Wya(a) ? "MousePrims.getY" : Xya(a) ? "NLMath.abs" : Yya(a) ? "NLMath.acos" : Zya(a) ? "NLMath.asin" : $ya(a) ? "NLMath.atan" : aza(a) ? "NLMath.ceil" : bza(a) ? "NLMath.cos" : cza(a) ? "NLMath.exp" : dza(a) ? "NLMath.floor" : eza(a) ? "NLMath.toInt" : fza(a) ? "NLMath.ln" : gza(a) ? "NLMath.log" : hza(a) ? "NLMath.mod" : iza(a) ? "NLMath.pow" : jza(a) ? "NLMath.precision" : kza(a) ? "NLMath.round" : lza(a) ? "NLMath.sin" : mza(a) ? "NLMath.sqrt" : nza(a) ?
             "NLMath.subtractHeadings" : oza(a) ? "NLMath.tan" : pza(a) ? "ColorModel.nearestColorNumberOfHSB" : qza(a) ? "ColorModel.nearestColorNumberOfRGB" : rza(a) ? "ColorModel.colorToHSB" : sza(a) ? "ColorModel.colorToRGB" : tza(a) ? "ColorModel.hsbToRGB" : uza(a) ? "ColorModel.genRGBFromComponents" : vza(a) ? "ColorModel.scaleColor" : wza(a) ? "ColorModel.areRelatedByShade" : xza(a) ? "ColorModel.wrapColor" : yza(a) ? "Prims.div" : zza(a) ? "world.turtleManager.getTurtle" : Aza(a) ? "world.getPatchAt" : Bza(a) ? "Prims.equality" : Cza(a) ? "!Prims.equality" : Dza(a) ?
             "world.turtles" : Eza(a) ? "world.links" : Fza(a) ? "world.patches" : Gza(a) ? "world.ticker.tickCount" : Hza(a) ? "workspace.timer.elapsed" : Iza(a) ? "Tasks.map" : Jza(a) ? "Prims.random" : Kza(a) ? "Prims.generateNewSeed" : Lza(a) ? "Random.save" : Mza(a) ? "Prims.randomExponential" : Nza(a) ? "Prims.randomFloat" : Oza(a) ? "Prims.randomNormal" : Pza(a) ? "Prims.randomPoisson" : Qza(a) ? "Prims.randomGamma" : Rza(a) ? "Prims.linkSet" : Sza(a) ? "Prims.patchSet" : Tza(a) ? "Prims.turtleSet" : Uza(a) ? "Prims.turtlesOn" : Vza(a) ? "Prims.gt" : Wza(a) ? "Prims.lt" : Xza(a) ?
-            "Prims.gte" : Yza(a) ? "Prims.lte" : Zza(a) ? "world.linkManager.getLink" : $za(a) ? "Tasks.apply" : aAa(a) ? "Prims.boom" : bAa(a) ? "world.observer.subject" : cAa(a) ? "Prims.dateAndTime" : dAa(a) ? "Prims.nanoTime" : eAa(a) ? "UserDialogPrims.yesOrNo" : fAb(a) ? "world.hubnetManager.getHubnetMessageWaiting" : ixh(a) ? "world.hubnetManager.evalCmd" : fAc(a) ? "world.hubnetManager.getHubnetEnterMessage" : fAd(a) ? "world.hubnetManager.getHubnetExitMessage" : fAe(a) ? "world.hubnetManager.getHubnetMessage" : fAf(a) ? "world.hubnetManager.getHubnetMessageTag" : fAg(a) ? "world.hubnetManager.getHubnetMessageSource" :fAa(a) ? "UserDialogPrims.input" : c.t(a)
+            "Prims.gte" : Yza(a) ? "Prims.lte" : Zza(a) ? "world.linkManager.getLink" : $za(a) ? "Tasks.apply" : aAa(a) ? "Prims.boom" : bAa(a) ? "world.observer.subject" : cAa(a) ? "Prims.dateAndTime" : dAa(a) ? "Prims.nanoTime" : eAa(a) ? "UserDialogPrims.yesOrNo" : fAb(a) ? "world.hubnetManager.getHubnetMessageWaiting" : ixh(a) ? "world.hubnetManager.evalCmd" :  ixp(a) ? "world.hubnetManager.gbccGetFromUser" : ixq(a) ? "world.hubnetManager.gbccGet" : fAc(a) ? "world.hubnetManager.getHubnetEnterMessage" : fAd(a) ? "world.hubnetManager.getHubnetExitMessage" : fAe(a) ? "world.hubnetManager.getHubnetMessage" : fAf(a) ? "world.hubnetManager.getHubnetMessageTag" : fAg(a) ? "world.hubnetManager.getHubnetMessageSource" :fAa(a) ? "UserDialogPrims.input" : c.t(a)
     };
     l.cb = function(a) {
         return this.gn(a)
@@ -68065,6 +68096,97 @@
         k: 1,
         j: 1
     });
+
+
+    // gbcc-set
+    function KNaq() {
+        this.q = this.i = this.h = null;
+        this.a = 0
+    }
+    KNaq.prototype = new n;
+    KNaq.prototype.constructor = KNaq;
+    l = KNaq.prototype;
+    l.d = function() {
+        M(this);
+        return this
+    };
+    l.x = g("_gbccset");
+    l.v = g(0);
+    l.p = function(a) {
+        return ixl(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
+    };
+    l.w = function(a) {
+        throw (new T).c("" + a);
+    };
+    l.m = function() {
+        return Z(V(), this)
+    };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+      A();
+      var a = (new x).g([Ip(I()), tc()]),
+          c = A().u,
+          a = B(a, c),
+          c = Jp(I()) | Ip(I()),
+          d = H();
+      I();
+      var e = yc();
+      I();
+      var f = J();
+      I();
+      var h = J();
+      I();
+      I();
+      I();
+      var k = J();
+      I();
+      return K(new L, d, e, a, c, f, h, !1, "OTPL", k, k.ca())
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
+    l.s = function() {
+        return Q(P(), this)
+    };
+    l.z = function() {
+        return $(this)
+    };
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.i
+    };
+
+    function ixl(a) {
+        return !!(a && a.b && a.b.o.DKCA)
+    }
+    l.b = m({
+        DKCA: 0
+    }, !1, "org.nlogo.core.prim.etc._gbccset", {
+        DKCA: 1,
+        e: 1,
+        ea: 1,
+        E: 1,
+        G: 1,
+        xb: 1,
+        y: 1,
+        r: 1,
+        k: 1,
+        j: 1
+    });
+
+    
 
     function cG() {
         this.q = this.i = this.h = this.la = null;
@@ -88740,22 +88862,30 @@
         k: 1,
         j: 1
     });
-
-    // hubnet-send
-    function KNac() {
-      hZ.call(this)
+    
+    
+    
+    
+    // gbcc-set-globals
+    function KNao() {
+        this.q = this.i = this.h = null;
+        this.a = 0
     }
-    KNac.prototype = new iZ;
-    KNac.prototype.constructor = KNac;
-    l = KNac.prototype;
+    KNao.prototype = new n;
+    KNao.prototype.constructor = KNao;
+    l = KNao.prototype;
     l.d = function() {
-      hZ.prototype.U.call(this, (new x).g([Ip(I()), Ip(I()), Ip(I())]));
-      return this
+        M(this);
+        return this
     };
-    l.x = g("_hubnetsend");
+    l.x = g("_gbccsetglobals");
     l.v = g(0);
     l.p = function(a) {
-        return ixc(a) && !0
+        return ixi(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
     };
     l.w = function(a) {
         throw (new T).c("" + a);
@@ -88763,21 +88893,132 @@
     l.m = function() {
         return Z(V(), this)
     };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+        I();
+        var a = y();
+        I();
+        var c = J();
+        I();
+        var d = J();
+        I();
+        var e = J();
+        I();
+        return zc(I(), a, c, d, "O---", e, !1)
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 138");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
+    l.s = function() {
+        return Q(P(), this)
+    };
+    
+    l.z = function() {
+        return $(this)
+    };
+    
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 138");
+        return this.i
+    };
+    
+    function ixi(a) {
+        return !!(a && a.b && a.b.o.DKAA)
+    }
+    l.b = m({
+        DKAA: 0
+    }, !1, "org.nlogo.core.prim.etc._gbccsetglobals", {
+        DKAA: 1,
+        e: 1,
+        ta: 1,
+        E: 1,
+        G: 1,
+        y: 1,
+        r: 1,
+        k: 1,
+        j: 1
+    });
+    ///
+    
+    //gbcc-get-globals-from-user
+    function KNan() {
+        this.q = this.i = this.h = null;
+        this.a = 0
+    }
+    KNan.prototype = new n;
+    KNan.prototype.constructor = KNan;
+    l = KNan.prototype;
+    l.d = function() {
+        M(this);
+        return this
+    };
+    l.x = g("_gbccgetglobalsfromuser");
+    l.v = g(0);
+    l.p = function(a) {
+        return ixj(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
+    };
+    l.w = function(a) {
+        throw (new T).c("" + a);
+    };
+    l.m = function() {
+        return Z(V(), this)
+    };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+        A();
+        var a = (new x).g([Ip(I())]),
+            c = A().u,
+            a = B(a, c);
+        I();
+        c = J();
+        I();
+        var d = J();
+        I();
+        var e = J();
+        I();
+        return zc(I(), a, c, d, "O---", e, !1)
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: java.scala: 447");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
     l.s = function() {
         return Q(P(), this)
     };
     l.z = function() {
         return $(this)
     };
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: java.scala: 447");
+        return this.i
+    };
 
-    function ixc(a) {
-        return !!(a && a.b && a.b.o.DKB)
+    function ixj(a) {
+        return !!(a && a.b && a.b.o.DKAB)
     }
     l.b = m({
-        DKB: 0
-    }, !1, "org.nlogo.core.prim.etc._hubnetsend", {
-        DKB: 1, 
-        nf: 1,
+        DKAB: 0
+    }, !1, "org.nlogo.core.prim.etc._gbccgetglobalsfromuser", {
+        DKAB: 1,
         e: 1,
         ta: 1,
         E: 1,
@@ -88789,6 +89030,96 @@
     });
 
     
+    
+    // hubnet-send
+    function KNac() {
+        this.q = this.i = this.h = null;
+        this.a = 0
+    }
+    KNac.prototype = new n;
+    KNac.prototype.constructor = KNac;
+    l = KNac.prototype;
+    l.d = function() {
+        M(this);
+        return this
+    };
+    l.x = g("_hubnetsend");
+    l.v = g(0);
+    l.p = function(a) {
+        return ixc(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
+    };
+    l.w = function(a) {
+        throw (new T).c("" + a);
+    };
+    l.m = function() {
+        return Z(V(), this)
+    };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+      A();
+      var a = (new x).g([Ip(I()), Jp(I()) | Ip(I()), tc()]),
+          c = A().u,
+          a = B(a, c),
+          c = Jp(I()) | Ip(I()),
+          d = H();
+      I();
+      var e = yc();
+      I();
+      var f = J();
+      I();
+      var h = J();
+      I();
+      I();
+      I();
+      var k = J();
+      I();
+      return K(new L, d, e, a, c, f, h, !1, "OTPL", k, k.ca())
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
+    l.s = function() {
+        return Q(P(), this)
+    };
+    l.z = function() {
+        return $(this)
+    };
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.i
+    };
+
+    function ixc(a) {
+        return !!(a && a.b && a.b.o.DKB)
+    }
+    l.b = m({
+        DKB: 0
+    }, !1, "org.nlogo.core.prim.etc._hubnetsend", {
+        DKB: 1,
+        e: 1,
+        ea: 1,
+        E: 1,
+        G: 1,
+        xb: 1,
+        y: 1,
+        r: 1,
+        k: 1,
+        j: 1
+    });
+
+      
         // gbcc-run-code
         function KNak() {
           hZ.call(this)
@@ -88838,53 +89169,6 @@
 
 
 
-
-// gbcc-get
-function KNaj() {
-  hZ.call(this)
-}
-KNaj.prototype = new iZ;
-KNaj.prototype.constructor = KNaj;
-l = KNaj.prototype;
-l.d = function() {
-  hZ.prototype.U.call(this, (new x).g([Ip(I())]));
-  return this
-};
-l.x = g("_gbccget");
-l.v = g(0);
-l.p = function(a) {
-    return ixd(a) && !0
-};
-l.w = function(a) {
-    throw (new T).c("" + a);
-};
-l.m = function() {
-    return Z(V(), this)
-};
-l.s = function() {
-    return Q(P(), this)
-};
-l.z = function() {
-    return $(this)
-};
-
-function ixd(a) {
-    return !!(a && a.b && a.b.o.DKC)
-}
-l.b = m({
-    DKC: 0
-}, !1, "org.nlogo.core.prim.etc._gbccget", {
-    DKC: 1, 
-    nf: 1,
-    e: 1,
-    ta: 1,
-    E: 1,
-    G: 1,
-    y: 1,
-    r: 1,
-    k: 1,
-    j: 1
-});
         
         
 // gbcc-wait
@@ -94578,6 +94862,97 @@ l.b = m({
         j: 1
     });
 
+
+    // gbcc-broadcast
+    function KNap() {
+        this.q = this.i = this.h = null;
+        this.a = 0
+    }
+    KNap.prototype = new n;
+    KNap.prototype.constructor = KNap;
+    l = KNap.prototype;
+    l.d = function() {
+        M(this);
+        return this
+    };
+    l.x = g("_gbccbroadcast");
+    l.v = g(0);
+    l.p = function(a) {
+        return ixk(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
+    };
+    l.w = function(a) {
+        throw (new T).c("" + a);
+    };
+    l.m = function() {
+        return Z(V(), this)
+    };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+        A();
+        var a = (new x).g([tc()]),
+            c = A().u,
+            a = B(a, c),
+            c = Hp(I()),
+            d = H();
+        I();
+        var e = yc();
+        I();
+        var f = J();
+        I();
+        var h = J();
+        I();
+        I();
+        I();
+        var k = J();
+        I();
+        return K(new L, d, e, a, c, f, h, !1, "OTPL", k, k.ca())
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
+    l.s = function() {
+        return Q(P(), this)
+    };
+    l.z = function() {
+        return $(this)
+    };
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.i
+    };
+
+    function ixk(a) {
+        return !!(a && a.b && a.b.o.ZLA)
+    }
+    l.b = m({
+        ZLA: 0
+    }, !1, "org.nlogo.core.prim.etc._gbccbroadcast", {
+        ZLA: 1,
+        e: 1,
+        ea: 1,
+        E: 1,
+        G: 1,
+        xb: 1,
+        y: 1,
+        r: 1,
+        k: 1,
+        j: 1
+    });
+
+
+
     function rI() {
         this.q = this.i = this.h = null;
         this.a = 0
@@ -97359,6 +97734,96 @@ l.b = m({
         j: 1
     });
 
+
+    // gbcc-get
+    function KNat() {
+        this.q = this.i = this.h = null;
+        this.a = 0
+    }
+    KNat.prototype = new n;
+    KNat.prototype.constructor = KNat;
+    l = KNat.prototype;
+    l.d = function() {
+        M(this);
+        return this
+    };
+    l.x = g("_gbccget");
+    l.v = g(0);
+    l.p = function(a) {
+        return ixq(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
+    };
+    l.w = function(a) {
+        throw (new T).c("" + a);
+    };
+    l.m = function() {
+        return Z(V(), this)
+    };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+        A();
+        var a = (new x).g([Ip(I())]),
+            c = A().u,
+            a = B(a, c),
+            c = W(I()),
+            d = H();
+        I();
+        var e = yc();
+        I();
+        var f = J();
+        I();
+        var h = J();
+        I();
+        I();
+        I();
+        var k = J();
+        I();
+        return K(new L, d, e, a, c, f, h, !1, "OTPL", k, k.ca())
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 857");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
+    l.s = function() {
+        return Q(P(), this)
+    };
+    l.z = function() {
+        return $(this)
+    };
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 857");
+        return this.i
+    };
+
+    function ixq(a) {
+        return !!(a && a.b && a.b.o.jOA)
+    }
+    l.b = m({
+        jOA: 0
+    }, !1, "org.nlogo.core.prim.etc._gbccget", {
+        jOA: 1,
+        e: 1,
+        ea: 1,
+        E: 1,
+        G: 1,
+        xb: 1,
+        y: 1,
+        r: 1,
+        k: 1,
+        j: 1
+    });
+
+
     function bK() {
         this.q = this.i = this.h = null;
         this.a = 0
@@ -97993,6 +98458,92 @@ l.b = m({
     
     
     
+    // gbcc-get-from-user
+    function KNas() {
+        this.q = this.i = this.h = null;
+        this.a = 0
+    }
+    KNas.prototype = new n;
+    KNas.prototype.constructor = KNas;
+    l = KNas.prototype;
+    l.d = function() {
+        M(this);
+        return this
+    };
+    l.x = g("_gbccgetfromuser");
+    l.v = g(0);
+    l.p = function(a) {
+        return ixp(a) && !0
+    };
+    l.P = function(a) {
+        this.i = a;
+        this.a |= 2
+    };
+    l.w = function(a) {
+        throw (new T).c("" + a);
+    };
+    l.m = function() {
+        return Z(V(), this)
+    };
+    l.R = function(a) {
+        this.q = a;
+        this.a |= 4
+    };
+    l.H = function() {
+      A();
+      var a = (new x).g([Ip(I()), Ip(I())]),
+          c = A().u,
+          a = B(a, c),
+          c = Ip(I()),
+          d = (new we).l(2),
+          e = (new we).l(0),
+          f = H();
+      I();
+      var h = yc();
+      I();
+      I();
+      I();
+      var k = J();
+      I();
+      return K(new L, f, h, a, c, d, e, !1, "OTPL", k, k.ca())
+    };
+    l.L = function() {
+        if (0 === (1 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.h
+    };
+    l.N = function(a) {
+        this.h = a;
+        this.a |= 1
+    };
+    l.s = function() {
+        return Q(P(), this)
+    };
+    l.z = function() {
+        return $(this)
+    };
+    l.Q = function() {
+        if (0 === (2 & this.a)) throw (new D).c("Uninitialized field: etc.scala: 495");
+        return this.i
+    };
+
+    function ixp(a) {
+        return !!(a && a.b && a.b.o.DKGG)
+    }
+    l.b = m({
+        DKGG: 0
+    }, !1, "org.nlogo.core.prim.etc._gbccgetfromuser", {
+        DKGG: 1,
+        e: 1,
+        ea: 1,
+        E: 1,
+        G: 1,
+        xb: 1,
+        y: 1,
+        r: 1,
+        k: 1,
+        j: 1
+    });
+  
     
 
     function jK() {
