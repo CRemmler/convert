@@ -1,7 +1,8 @@
 var socket;
 var universe;
-var universes = {};
 var commandQueue = [];
+var userData = {};
+var myData = {};
 var activityType;
 
 jQuery(document).ready(function() {
@@ -51,43 +52,41 @@ jQuery(document).ready(function() {
 
   // students display reporters
   socket.on("display reporter", function(data) {
-    console.log("display reporter " + data.hubnetMessageTag);
     if (data.hubnetMessageTag === "canvas") {
-      console.log("display canvas");
       if ($("#image-"+data.hubnetMessageSource).length === 0) {
         var canvasImg = new Image();
         canvasImg.id = "image-" + data.hubnetMessageSource;
         canvasImg.src = data.hubnetMessage;
         canvasImg.userId = data.hubnetMessageSource;
         canvasImg.onclick = function() {
-          //world.hubnetManager.setGbccCanvasSource(canvasImg.userId);
-          console.log("clicked on userId "+canvasImg.userId);
-          world.hubnetManager.gbccRunCode('gbcc-gallery-click "'+canvasImg.userId+'"');
+          socket.emit("request user data", {userId: canvasImg.userId});
+          //world.hubnetManager.setGbccCanvasSource(canvasImg.userId);        
+          //world.hubnetManager.gbccRunCode('gbcc-gallery-click "'+canvasImg.userId+'"');
         };  
         $(".netlogo-gallery").append(canvasImg);
       } else {        
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
-      //console.log(data.components[data.hubnetMessageTag]);
       if (activityType === "hubnet") {
         // send it to reporters
         $(data.components[data.hubnetMessageTag]).val(data.hubnetMessage);
       } else {
-        // save it in world
-        switch (data.hubnetMessageTag) {
-          case "patches": 
-            break;
-          case "turtles": 
-            break;
-          default: 
-            if (world.observer.getGlobal(data.hubnetMessageTag) != undefined) {
-              world.observer.setGlobal(data.hubnetMessageTag, data.hubnetMessage);
-            }
-            break;
+        // WARNING: gbcc-set-globals overwrites globals, may not want this feature
+        if (world.observer.getGlobal(data.hubnetMessageTag) != undefined) {
+          world.observer.setGlobal(data.hubnetMessageTag, data.hubnetMessage);
         }
       }
     }
+  });
+
+  // This function is called after the user clicks on a canvas in the gallery.
+  // The data from that user is downloaded before the gallery click handler is initiated
+  // WARNING: This means you should not call the gallery click handler from within NetLogo 
+  // AND You should not call gbcc-get-from-user from outside of the click handler
+  socket.on("accept user data", function(data) {
+    userData = data.userData;
+    world.hubnetManager.gbccRunCode('gbcc-gallery-click "'+data.userId+'"');
   });
 
   socket.on("execute command", function(data) {
@@ -104,72 +103,28 @@ jQuery(document).ready(function() {
     Interface.showDisconnected();
   });
     
-  // when student clicks on chooser, slider, switch, input-box, slider or button on Student Interface  
-  $(".netlogo-widget-container").on("click", ".student-input", function(e) {
-    var type, label, value, id;
-    var position, offset, size;
-    if ($(this).attr("id").includes("chooser")) { type = "chooser";
-    } else if ($(this).attr("id").includes("slider")) { type = "slider";
-    } else if ($(this).attr("id").includes("switch")) { type = "switch";
-    } else if ($(this).attr("id").includes("inputBox")) { type = "inputBox";    
-    } else if ($(this).attr("id").includes("button")) { type = "button";
-    } else if ($(this).attr("id").includes("view")) { type = "view"; } 
-    id = $(this).attr("id");    
-    switch (type) {
-      case "chooser":
-        label = $("#"+id+" .netlogo-label").text();
-        value = $("#"+id+" option:selected").val();
-        break;
-      case "slider": 
-        label = $("#"+id+" .netlogo-label").text();
-        value = $("#"+id+" input").val();
-        break;
-      case "switch": 
-        label = $("#"+id+" .netlogo-label").text();
-        value = $("#"+id+" input").prop("value");
-        break;
-      case "inputBox": 
-        label = $("#"+id+" .netlogo-label").text();
-        value = $("#"+id+" textarea").val();    
-        break;  
-      case "button":
-        label = $("#"+id+" .netlogo-label").text();
-        value = "";      
-        break;
-      case "view": 
-        label = "view";
-        position = [ e.clientX, e.clientY ];
-        offset = $(this).offset();
-        offset = [ offset.left, offset.top ];
-        pixelDimensions = [ parseFloat($(this).css("width")), parseFloat($(this).css("height")) ];
-        percent = [ ((position[0] - offset[0]) / pixelDimensions[0]), ((position[1] - offset[1]) / pixelDimensions[1]) ]; 
-        patchDimensions = [ universe.model.world.worldwidth, universe.model.world.worldheight ];
-        value = [ (percent[0] * patchDimensions[0]) +  universe.model.world.minpxcor, 
-        universe.model.world.maxpycor - (percent[1] * patchDimensions[1]) ]
-        break;
-    } 
-    if ((type != "button") && (type != "view")) {
-      socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:value});      
-    }
-    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
+  // when student clicks on button on Student Interface
+  $(".netlogo-widget-container").on("click", ".student-button", function() {
+    socket.emit("send command", {hubnetMessageTag: $(this).text().trim(), hubnetMessage:""});
   });
-
-
-  // highlight all text in output, when clicked
-  $(".netlogo-output").click(function() { 
-    var sel, range;
-    var el = $(this)[0];
-    if (window.getSelection && document.createRange) { //Browser compatibility
-      sel = window.getSelection();
-      if(sel.toString() == ''){ //no text selection
-         window.setTimeout(function(){
-            range = document.createRange(); //range object
-            range.selectNodeContents(el); //sets Range
-            sel.removeAllRanges(); //remove all ranges from selection
-            sel.addRange(range);//add Range to a Selection.
-        },1);
-      }
+  // when student clicks on chooser, switch, slider on Student Interface  
+  $(".netlogo-widget-container").on("click", ".student-input", function() {
+    var label, value, id;
+    if ($(this).attr("id").includes("chooser")) {
+      id = $(this).attr("id");
+      label = $("#"+id+" span").text()
+      value = $("#"+id+" option:selected").val()
+    } else if ($(this).attr("id").includes("slider")) {
+      id = $(this).attr("id");
+      label = $("#"+id+" input").text().trim();
+      value = $("#"+id+" input").val();
+    } else if ($(this).attr("id").includes("switch")) {
+      id = $(this).attr("id");
+      label = $("#"+id+" span").text();
+      value = $("#"+id+" input").val();
     }
+    //console.log("send value "+value + " " + label + " " + id);
+    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:parseInt(value)});
+    socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:parseInt(value)});
   });
-
 });

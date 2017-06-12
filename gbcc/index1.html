@@ -47173,8 +47173,6 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
       this._setHubnetMessageSource = bind(this._setHubnetMessageSource, this);
       this._getHubnetMessageTag = bind(this._getHubnetMessageTag, this);
       this._setHubnetMessageTag = bind(this._setHubnetMessageTag, this);
-      //this._getGbccCanvasSource = bind(this._getGbccCanvasSource, this);
-      //this._setGbccCanvasSource = bind(this._setGbccCanvasSource, this);
     }
     
     // Reporters
@@ -47214,12 +47212,6 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
     HubnetManager.prototype.setHubnetMessageTag = function(messageTag) {
       hubnetMessageTag = messageTag;
     };
-    //HubnetManager.prototype.getGbccCanvasSource = function() {
-    //  return gbccCanvasSource;
-    //};
-    //HubnetManager.prototype.setGbccCanvasSource = function(messageSource) {
-    //  gbccCanvasSource = messageSource;
-    //};
     
     // Commands
     HubnetManager.prototype.hubnetFetchMessage = function() {
@@ -47267,14 +47259,13 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
       }  
     };
     
-    HubnetManager.prototype.gbccGetGlobals = function(userId) {
+    HubnetManager.prototype.gbccGetGlobals = function(messageSource) {
       console.log("gbccGetGlobals " + userId);
-      //var messageSource = world.hubnetManager.getGbccCanvasSource();
       var globalVars = world.observer.varNames();
       for (var globalVar in globalVars) {
         console.log("get "+globalVars[globalVar]+" "+userId);
         socket.emit("get reporter", {
-          hubnetMessageSource: userId, 
+          hubnetMessageSource: messageSource, 
           hubnetMessageTag: globalVars[globalVar], 
           hubnetMessage: world.observer.getGlobal(globalVars[globalVar])
         });
@@ -47301,45 +47292,23 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
       }
     };
     
-    HubnetManager.prototype.gbccSet = function(key, value) {
-      console.log("gbccSet " + key + " " + value);
-    };
-    
-    function yep() {
-      socket.emit("get it");
-      var i=0;
-      while (i < 200) {
-        i++;
-        
-        if (foundIt || i === 199) { return "wanna work"; }
-      } 
-    }
-    
-
-    
-    HubnetManager.prototype.gbccGetFromUser = function(userid, key) {
-      console.log("gbccGetFromUser ");
-      return yep();
-    };
-    
-    HubnetManager.prototype.gbccGet = function(key) {
-      console.log("gbccGet " + key);
-      return "nada";
-    };
-    
-    /*
-    HubnetManager.prototype.gbccGet = function(messageTag) {
-      console.log("gbccGet " + messageTag);
-      messageSource = world.hubnetManager.getGbccCanvasSource();
-      console.log("gbccGet " + messageTag + " from " + messageSource);
-      socket.emit("get reporter", {
-        hubnetMessageSource: messageSource, 
+    HubnetManager.prototype.gbccSet = function(messageTag, message) {
+      socket.emit("send reporter", {
+        hubnetMessageSource: "server", 
         hubnetMessageTag: messageTag, 
-        hubnetMessage: ""
+        hubnetMessage: message
       });
+      myData[messageTag] = message;
+    };
 
-    };*/
+    HubnetManager.prototype.gbccGetFromUser = function(messageSource, messageTag) {
+      return userData[messageTag];
+    };
     
+    HubnetManager.prototype.gbccGet = function(messageTag) {
+      return myData[messageTag];
+    };
+
     var processCommand = function(m) {
       //console.log(m.messageSource+" "+m.messageTag+" "+m.message);
       if (commandQueue.length === 0) {
@@ -47360,7 +47329,6 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
     
     return HubnetManager;
 
-    
   })();
 
 }).call(this);
@@ -60151,3 +60119,5 @@ _nS('controllers.Local'); _root['controllers']['Local']['standalone'] =
 </script>
 <!-- This can be used to insert nlogo code into this page -->
 <script type="text/nlogo" id="nlogo-code" data-filename="introbuttons_web_02.nlogo">
+
+

@@ -91,7 +91,6 @@ io.on('connection', function(socket){
 					socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});				
 					var dataObject;
 					if (roomData[myRoom].userData != {}) {
-						console.log("loop through canvases "+roomData[myRoom].canvasOrder.length);
 						for (var j=0; j < roomData[myRoom].canvasOrder.length; j++) {
 							if (roomData[myRoom].userData[roomData[myRoom].canvasOrder[j]]["canvas"] != undefined) {
 								dataObject = {
@@ -102,7 +101,6 @@ io.on('connection', function(socket){
 									userId: myUserId,
 									activityType: activityType
 								};
-								console.log("display reporter");
 								socket.emit("display reporter", dataObject);
 							}
 						}
@@ -162,14 +160,10 @@ io.on('connection', function(socket){
 		var myUserId = socket.id;
 		var destination = data.hubnetMessageSource;
 		if (roomData[myRoom].userData[myUserId]) {
-			console.log("send reporter " + data.hubnetMessageTag);
 			if (( data.hubnetMessageTag === "canvas") && (roomData[myRoom].userData[myUserId]["canvas"] === undefined)) {
 				roomData[myRoom].canvasOrder.push(myUserId);
 			}
 			if (destination === "server") {
-				if (data.hubnetMessageTag === "code-example") {
-					console.log("code-example is "+data.hubnetMessage +" for "+myUserId);
-				}
 				roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
 			} else {
 				var dataObject = {
@@ -194,15 +188,15 @@ io.on('connection', function(socket){
 	});
 	
 	// pass reporter from student to server
-	socket.on("get it", function() {
-		socket.emit("got it");
+	socket.on("request user data", function(data) {
+		var myRoom = socket.myRoom;
+		socket.emit("accept user data", {userId: data.userId, userData: roomData[myRoom].userData[data.userId]});
 	});
 
 	// pass reporter from student to server
 	socket.on("get reporter", function(data) {
 		var myRoom = socket.myRoom;
 		var myUserId = socket.id;
-		socket.messageQueue = [];
 		if (roomData[myRoom].userData[data.hubnetMessageSource]) {
 			var dataObject = {
 				hubnetMessageSource: data.hubnetMessageSource,
@@ -213,6 +207,21 @@ io.on('connection', function(socket){
 				activityType: activityType
 			};
 			socket.emit("display reporter", dataObject);
+		}
+	});
+	
+	// get value from server
+	socket.on("get value", function(data) {
+		var myRoom = socket.myRoom;
+		var myUserId = socket.id;
+		if (data.hubnetMessageSource === "") { data.hubnetMessageSource = myUserId; }
+		if (roomData[myRoom].userData[data.hubnetMessageSource]) {
+			var dataObject = {
+				hubnetMessageSource: data.hubnetMessageSource,
+				hubnetMessageTag: data.hubnetMessageTag,
+				hubnetMessage: roomData[myRoom].userData[data.hubnetMessageSource][data.hubnetMessageTag],
+			};
+			socket.emit("display value", dataObject);
 		}
 	});
 	
