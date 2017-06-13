@@ -16,8 +16,7 @@ app.post('/fileupload',function(req,res){
    var form = new formidable.IncomingForm();
    var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
    form.parse(req, function(err, fields, files) {
-     var file = files.filetoupload;
-     nlogoFileName = file.name || "error";
+     nlogoFileName = files.filetoupload.path || "error";
      var configFile;
      var nlogoFile;
      var indexFile;
