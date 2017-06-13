@@ -69,7 +69,7 @@ app.post('/fileupload',function(req,res){
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
                   widget = widget.replace("NIL",'""');
                   widget = widget+'\n0\n1\n11\n\n';
-                  reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)]);
+                  reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)+" output"]);
                   break;
                 case "OUTPUT": break;
                 case "TEXTBOX": break;
@@ -105,7 +105,7 @@ app.post('/fileupload',function(req,res){
           }
           nlogoFile = nlogoFile + array[i] + "\n";
         }
-        console.log(nlogoFile);
+        //console.log(nlogoFile);
       }).then(function() {
       fs.readFileAsync("gbcc/config.json", "utf8").then(function(data) {
          var array = data.toString().split("\n");
@@ -123,7 +123,7 @@ app.post('/fileupload',function(req,res){
              }
            }
          }
-         console.log(configFile);
+         //console.log(configFile);
       }).then(function() {
       fs.readFileAsync("gbcc/index1.html", "utf8").then(function(data) {
          indexFile = "";
@@ -161,7 +161,7 @@ app.post('/fileupload',function(req,res){
            zip.file("server.js", data);
         }).then(function() {
         zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-          /*.pipe(fs.createWriteStream(guid+'.zip'))
+          .pipe(fs.createWriteStream(guid+'.zip'))
           .on('finish', function () {
             res.download(guid+'.zip', function() {
               var fullPath= __dirname + '/'+guid+'.zip';
@@ -170,7 +170,7 @@ app.post('/fileupload',function(req,res){
                 console.log(fullPath + " deleted");
               });
             });
-          });*/
+          });
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);

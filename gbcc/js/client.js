@@ -27,7 +27,8 @@ jQuery(document).ready(function() {
         Interface.showStudent(data.room, data.components);
         break;
       case "login":
-        Interface.showLogin(data.rooms, data.components, activityType);
+        activityType = data.activityType;
+        Interface.showLogin(data.rooms, data.components);
         break;
       case "disconnected":
         Interface.showDisconnected();
