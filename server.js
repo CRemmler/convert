@@ -24,6 +24,7 @@ app.post('/fileupload',function(req,res){
      var loginWidgerRange, studentWidgetRange, teacherWidgetRange;
      var widgetList = [];
      var reporterComponentList = [];
+     var globalsFound = false;
      fs.readFileAsync(nlogoFileName, "utf8").then(function(data) {
         var array = data.toString().split("\n");
         nlogoFile = "";
@@ -37,14 +38,17 @@ app.post('/fileupload',function(req,res){
         var widgets = ["BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUTBOX", "MONITOR", "OUTPUT", "TEXTBOX", "VIEW", "GRAPHICS-WINDOW"];
         var viewWidgets = ["VIEW", "GRAPHICS-WINDOW"];
         for(i in array) {
+          if (arrayIndex === 0 && array[i] === "@#$#@#$#@") { nlogoFile = nlogoFile + "\n\nto client-procedure\nend\n"; }
           nlogoFile = nlogoFile + array[i] + "\n";
           if (arrayIndex === 1) { if (widgets.indexOf(array[i]) > -1) { numTeacherWidgets++; } }
           if (arrayIndex === 8) {
             if ((widgets.indexOf(array[i]) > -1) || (array[i]==="@#$#@#$#@")) { 
-              if (array[i] != "VIEW") { numStudentWidgets++; }
+              if ((array[i] != "VIEW") && (array[i]!="@#$#@#$#@")) { numStudentWidgets++; }
               switch (lastWidgetType) {
                 case "BUTTON": 
                   widget = widget.substr(0,widget.lastIndexOf("NIL"))+"NIL\nNIL\nNIL\n"+widget.lastIndexOf("NIL")+"\n\n";
+                  widget = widget.replace("NIL","client-procedure");
+                  if (widget.split("NIL").length === 5) { widget = widget.replace("NIL\nNIL","NIL\nNIL\nNIL"); }
                   break;
                 case "SLIDER": 
                   reporterComponentList.push([label, "#netlogo-slider-"+(numTeacherWidgets+numStudentWidgets - 2)]);
@@ -63,6 +67,7 @@ app.post('/fileupload',function(req,res){
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
                   widget = widget.substr(0,widget.lastIndexOf("\n"));
+                  widget = widget.replace("NIL",'""');
                   widget = widget+'\n0\n1\n11\n\n';
                   reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)]);
                   break;
@@ -70,7 +75,7 @@ app.post('/fileupload',function(req,res){
                 case "TEXTBOX": break;
                 case "VIEW": break;
               }
-              if ((widget != "") && (viewWidgets.indexOf(lastWidgetType > -1))) { 
+              if ((widget != "") && (viewWidgets.indexOf(lastWidgetType) === -1)) { 
                 widgetList.push(widget); 
                 widget = "";
               }             
@@ -100,7 +105,7 @@ app.post('/fileupload',function(req,res){
           }
           nlogoFile = nlogoFile + array[i] + "\n";
         }
-        //console.log(nlogoFile);
+        console.log(nlogoFile);
       }).then(function() {
       fs.readFileAsync("gbcc/config.json", "utf8").then(function(data) {
          var array = data.toString().split("\n");
@@ -156,7 +161,7 @@ app.post('/fileupload',function(req,res){
            zip.file("server.js", data);
         }).then(function() {
         zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-          .pipe(fs.createWriteStream(guid+'.zip'))
+          /*.pipe(fs.createWriteStream(guid+'.zip'))
           .on('finish', function () {
             res.download(guid+'.zip', function() {
               var fullPath= __dirname + '/'+guid+'.zip';
@@ -165,7 +170,7 @@ app.post('/fileupload',function(req,res){
                 console.log(fullPath + " deleted");
               });
             });
-          });
+          });*/
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);

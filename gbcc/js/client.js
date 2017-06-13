@@ -60,7 +60,6 @@ jQuery(document).ready(function() {
         canvasImg.userId = data.hubnetMessageSource;
         canvasImg.onclick = function() {
           socket.emit("request user data", {userId: canvasImg.userId});
-          //world.hubnetManager.setGbccCanvasSource(canvasImg.userId);        
           //world.hubnetManager.gbccRunCode('gbcc-gallery-click "'+canvasImg.userId+'"');
         };  
         $(".netlogo-gallery").append(canvasImg);
@@ -102,29 +101,5 @@ jQuery(document).ready(function() {
   socket.on("teacher disconnect", function(data) {
     Interface.showDisconnected();
   });
-    
-  // when student clicks on button on Student Interface
-  $(".netlogo-widget-container").on("click", ".student-button", function() {
-    socket.emit("send command", {hubnetMessageTag: $(this).text().trim(), hubnetMessage:""});
-  });
-  // when student clicks on chooser, switch, slider on Student Interface  
-  $(".netlogo-widget-container").on("click", ".student-input", function() {
-    var label, value, id;
-    if ($(this).attr("id").includes("chooser")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" span").text()
-      value = $("#"+id+" option:selected").val()
-    } else if ($(this).attr("id").includes("slider")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" input").text().trim();
-      value = $("#"+id+" input").val();
-    } else if ($(this).attr("id").includes("switch")) {
-      id = $(this).attr("id");
-      label = $("#"+id+" span").text();
-      value = $("#"+id+" input").val();
-    }
-    //console.log("send value "+value + " " + label + " " + id);
-    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:parseInt(value)});
-    socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:parseInt(value)});
-  });
+
 });

@@ -1,7 +1,4 @@
 ## Known Issues with Conversion
-- Current version is not stable. Will post stable version, soon!
-- Switches, monitors, choosers, sliders on the student interface may not be fully functional.
-- May have to update config.json file to use netlogo-widgets successfully.
 
 ## Use NetLogo Hubnet primitive commands and reporters
 - [x] hubnet-fetch-message 
@@ -14,20 +11,17 @@
 - [x] hubnet-message-tag
 
 ## Use GbCC primitive commands and reporters
+- [x] gbcc-set
 - [x] gbcc-get
+- [x] gbcc-get-from-user
+- [x] gbcc-broadcast
 - [x] gbcc-run-code
+- [x] to gbcc-gallery-click [ user-id ] end
 
 ## Run the Converter
 - Clone this repo.
 - Install dependencies with npm install.
 - Run the server with node server.js
 - Go to localhost:3000/
-
-## Hubnet Client Input
-- slider, switch, chooser, input box, button, click on view
-
-## Known Issues with Conversion
-- Buttons on student interface may not be fully functional.
-- May have to update index.html file to create buttons successfully.
 
 Contact: c_remmler@yahoo.com

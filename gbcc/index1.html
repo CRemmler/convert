@@ -47245,6 +47245,16 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
     HubnetManager.prototype.gbccWait = function(seconds) {
       console.log("TO DO: wait " + seconds + " seconds");
     };
+    
+    // IDEAS for gbcc-wait-then <float> [<commands]
+    // NetLogo Desktop: show 1 wait 2 show 1 
+    // NetLogo Web: gbcc-wait-then 2 [ show 1 ] gbcc-wait-then 2 [ show 1 ]
+    // javascript:
+    //   setTimeout(function() {session.widgetController.ractive.findComponent('console').fire('run','let a 0 while [ a < 1 ] [every 2 [ show 1 set a a + 1]]');},1000);
+    //   setTimeout(function() {session.widgetController.ractive.findComponent('console').fire('run','let a 0 while [ a < 1 ] [every 2 [ show 2 set a a + 1]]');},1000);
+    // HubnetManager.prototype.gbccWaitThen = function(seconds, proc) {
+    //  console.log("TO DO: wait " + seconds + " seconds " + proc);
+    // };
 
     HubnetManager.prototype.gbccSetGlobals = function() {
       console.log("gbccSetGlobals");
