@@ -24,7 +24,10 @@ app.post('/fileupload',function(req,res){
      var loginWidgerRange, studentWidgetRange, teacherWidgetRange;
      var widgetList = [];
      fs.readFileAsync(nlogoFileName, "utf8").then(function(data) {
-        var array = data.toString().split("\n");
+
+        var sanitizedFileContents = removeUnimplementedPrimCalls(data.toString());
+
+        var array = sanitizedFileContents.split("\n");
         nlogoFile = "";
         var numTeacherWidgets = 0;
         var numStudentWidgets = 0;
@@ -35,6 +38,7 @@ app.post('/fileupload',function(req,res){
         var label;
         var widgets = ["BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUTBOX", "MONITOR", "OUTPUT", "TEXTBOX", "VIEW", "GRAPHICS-WINDOW", "PLOT"];
         var viewWidgets = ["VIEW", "GRAPHICS-WINDOW"];
+
         for(i in array) {
           // buttons on the client need a client-procedure, to avoid a console error
           if (arrayIndex === 0 && array[i] === "@#$#@#$#@") { nlogoFile = nlogoFile + "\n\nto client-procedure\nend\n"; }
@@ -160,6 +164,16 @@ app.post('/fileupload',function(req,res){
 
 function S4() {
   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+}
+
+// String -> String
+function removeUnimplementedPrimCalls(fileContents) {
+  var firstSepIndex     = fileContents.indexOf("@#$#@#$#@");
+  var nlogoCode         = fileContents.slice(0, firstSepIndex);
+  var remainder         = fileContents.slice(firstSepIndex);
+  var sanitizedLines    = nlogoCode.split("\n").map(function(line) { return line.replace(/(\s*)(hubnet-reset\s*(?:;.*)?)/, "$1;$2") });
+  var sanitizedContents = sanitizedLines.join("\n") + remainder;
+  return sanitizedContents;
 }
 
 app.get('/', function(req, res){
