@@ -53,8 +53,6 @@ to execute-command [ tag message ]
 end
 
 
-to client-procedure
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 255
@@ -197,7 +195,7 @@ PLOT
 348
 219
 498
-plot 2
+plot 1
 NIL
 NIL
 0.0

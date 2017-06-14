@@ -70,7 +70,7 @@ jQuery(document).ready(function() {
     } else {
       if (activityType === "hubnet") {
         //console.log(data.hubnetMessageTag+" "+data.hubnetMessage);
-        world.observer.setGlobal(data.hubnetMessageTag,data.hubnetMessage);
+        world.observer.setGlobal(data.hubnetMessageTag.toLowerCase(),data.hubnetMessage);
       } else {
         // WARNING: gbcc-set-globals overwrites globals, may not want this feature
         if (world.observer.getGlobal(data.hubnetMessageTag) != undefined) {
