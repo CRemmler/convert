@@ -10,7 +10,7 @@ Promise.promisifyAll(fs);
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(__dirname));
-  
+
 app.post('/fileupload',function(req,res){
    console.log("NOTE FROM C: If you get an ENOENT error, place your file in this directory, and then upload.");
    var form = new formidable.IncomingForm();
@@ -41,10 +41,10 @@ app.post('/fileupload',function(req,res){
           nlogoFile += array[i] + "\n";
           if (arrayIndex === 1) { if (widgets.indexOf(array[i]) > -1) { numTeacherWidgets++; } }
           if (arrayIndex === 8) {
-            if ((widgets.indexOf(array[i]) > -1) || (array[i]==="@#$#@#$#@")) { 
+            if ((widgets.indexOf(array[i]) > -1) || (array[i]==="@#$#@#$#@")) {
               if ((array[i] != "VIEW") && (array[i]!="@#$#@#$#@")) { numStudentWidgets++; }
               switch (lastWidgetType) {
-                case "BUTTON": 
+                case "BUTTON":
                   widget = widget.substr(0,widget.lastIndexOf("NIL"))+"NIL\nNIL\nNIL\n"+widget.lastIndexOf("NIL")+"\n\n";
                   widget = widget.replace("NIL","client-procedure");
                   if (widget.split("NIL").length === 5) { widget = widget.replace("NIL\nNIL","NIL\nNIL\nNIL"); }
@@ -54,13 +54,13 @@ app.post('/fileupload',function(req,res){
                   //widget = widget.replace("NIL",label+"\n0");
                   break;
               }
-              if ((widget != "") && (viewWidgets.indexOf(lastWidgetType) === -1)) { 
-                widgetList.push(widget); 
+              if ((widget != "") && (viewWidgets.indexOf(lastWidgetType) === -1)) {
+                widgetList.push(widget);
                 widget = "";
-              }             
+              }
               lastWidgetType = array[i];
               label = array[(parseInt(i) + 5).toString()];
-            }  
+            }
             if (lastWidgetType != "VIEW") { widget += array[i] + "\n"; }
 
           }
@@ -69,18 +69,18 @@ app.post('/fileupload',function(req,res){
         teacherWidgetRange = [0, numTeacherWidgets - 1];
         studentWidgetRange = (numStudentWidgets === 0) ? teacherWidgetRange : [numTeacherWidgets, numTeacherWidgets + numStudentWidgets - 1];
         loginWidgetRange = [(numTeacherWidgets + numStudentWidgets), (numTeacherWidgets + numStudentWidgets)];
-        var oldNlogoFile = nlogoFile;    
+        var oldNlogoFile = nlogoFile;
         var array = oldNlogoFile.toString().split("\n");
         nlogoFile = "";
         arrayIndex = 0;
         for (i in array) {
-          if (array[i] === "@#$#@#$#@") { 
-            arrayIndex++; 
+          if (array[i] === "@#$#@#$#@") {
+            arrayIndex++;
             if (arrayIndex === 2) {
               for (var j=0; j<widgetList.length; j++) {
                 nlogoFile += widgetList[j] + "\n";
               }
-            } 
+            }
           }
           nlogoFile += array[i] + "\n";
         }
@@ -102,7 +102,7 @@ app.post('/fileupload',function(req,res){
          indexFile = "";
          var array = data.toString().split("\n");
          for (i in array) { indexFile += array[i] + "\n"; }
-         indexFile += "\ndocument.title = '"+title+"';\n</script>";         
+         indexFile += "\ndocument.title = '"+title+"';\n</script>";
          indexFile += "\n<script type='text/nlogo' id='nlogo-code' data-filename='"+title+"'>";
          indexFile += nlogoFile;
       }).then(function() {
@@ -149,13 +149,13 @@ app.post('/fileupload',function(req,res){
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);
-        }); }); }); }); }); }); }); }); }); }); 
+        }); }); }); }); }); }); }); }); }); });
       });
    });
 });
 
 function S4() {
-  return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
+  return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
 }
 
 app.get('/', function(req, res){

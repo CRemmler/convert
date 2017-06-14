@@ -13,10 +13,10 @@ jQuery(document).ready(function() {
 
   // save student settings
   socket.on("save settings", function(data) {
-    userId = data.userId; 
-    userType = data.userType; 
+    userId = data.userId;
+    userType = data.userType;
   });
-  
+
   // display teacher or student interface
   socket.on("display interface", function(data) {
     switch (data.userType) {
@@ -35,7 +35,7 @@ jQuery(document).ready(function() {
         break;
     }
   });
-  
+
   // display admin interface
   socket.on("display admin", function(data) {
     Interface.showAdmin(data.roomData);
@@ -45,8 +45,8 @@ jQuery(document).ready(function() {
   socket.on("send update", function(data) {
     universe.applyUpdate({turtles: data.turtles, patches: data.patches});
     universe.repaint();
-  });  
-  
+  });
+
   socket.on("display admin", function(data) {
     $("#adminData").html(data.roomData);
   });
@@ -62,9 +62,9 @@ jQuery(document).ready(function() {
         canvasImg.userId = data.hubnetMessageSource;
         canvasImg.onclick = function() {
           socket.emit("request user data", {userId: canvasImg.userId});
-        };  
+        };
         $(".netlogo-gallery").append(canvasImg);
-      } else {        
+      } else {
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
@@ -82,7 +82,7 @@ jQuery(document).ready(function() {
 
   // This function is called after the user clicks on a canvas in the gallery.
   // The data from that user is downloaded before the gallery click handler is initiated
-  // WARNING: This means you should not call the gallery click handler from within NetLogo 
+  // WARNING: This means you should not call the gallery click handler from within NetLogo
   // AND You should not call gbcc-get-from-user from outside of the click handler
   socket.on("accept user data", function(data) {
     userData = data.userData;
@@ -97,7 +97,7 @@ jQuery(document).ready(function() {
     commandQueue.push(commandObject);
     world.hubnetManager.setHubnetMessageWaiting(true);
   });
-  
+
   // student leaves activity and sees login page
   socket.on("teacher disconnect", function(data) {
     Interface.showDisconnected();
