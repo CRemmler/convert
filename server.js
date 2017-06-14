@@ -53,6 +53,10 @@ app.post('/fileupload',function(req,res){
                   widget = widget.substr(0,widget.indexOf("NIL"))+'""'+"\n0\n1\n11\n";
                   //widget = widget.replace("NIL",label+"\n0");
                   break;
+                case "CHOOSER":
+                  var widgetLines = widget.split("\n");
+                  widgetLines[7]  = widgetLines[7].replace(/\\"/g, "\"");
+                  widget          = widgetLines.join("\n");
               }
               if ((widget != "") && (viewWidgets.indexOf(lastWidgetType) === -1)) {
                 widgetList.push(widget);
