@@ -52,16 +52,13 @@
     </div>
     <p>
     <div class='blue'><b>4. Troubleshoot.</b>
-      <br>If you want to stop the server, type ctrl-c. If you get an EADDRINUSE error when attempting
-      to restart the server,
-      <span class='code'>ps aux | grep node</span>, find the node server.js process (ex: 45102) and kill the process, 
-      <span class='code'>kill -9 45102</span>.
+      <br>If you want to stop the server, type ctrl-c.
       <br>If you get an error when attempting to open the webpage <span class='code'>hubnet-reset is not defined</span>,
       then that command is not implemented in NetLogo Hubnet Web, and you should comment it out.
       <br>In index.html, find the NetLogo code and comment it out <span class='code'>;; hubnet-reset</span>.
       <br>If you get this error: <span class='code'>This non-standard character is not allowed.</span>, then
       look in a client CHOOSER and remove the escape character. Change \"b\" to "b"
-      <br>If a monitor on a client has a label in red text, add it as a global variable.
+      <br>Monitors on clients must not have spaces in their names, and must have their names listed as globals.
     </div>
     <p>
     <div class='indigo'><b>5. Host NetLogo Hubnet Web App remotely.</b>

@@ -11,15 +11,20 @@ to startup
   hubnet-reset
 end
 
-to share-with-animals
+to share-with-students
+  show word "send woof " dog
   hubnet-send my-user-id "woof" dog
+  show word "send oink " pig
   hubnet-send my-user-id "oink" pig
+  show word "send neigh " horse
   hubnet-send my-user-id "neigh" horse
+  show word "send moo " cow
   hubnet-send my-user-id "moo" cow
+  show word "send sssss " snake
   hubnet-send my-user-id "sssss" snake
 end
 
-to listen-animals
+to listen-students
   while [ hubnet-message-waiting? ]
   [
     hubnet-fetch-message
@@ -41,17 +46,17 @@ end
 
 
 to execute-command [ tag message ]
-  show word tag word " " message
+  show word "get " word tag word " " message
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+255
+130
+728
+593
 -1
 -1
-13.0
+14.1
 1
 10
 1
@@ -72,12 +77,12 @@ ticks
 30.0
 
 BUTTON
-18
-45
-190
-78
+36
+44
+208
+77
 NIL
-share-with-animals
+share-with-students
 NIL
 1
 T
@@ -89,10 +94,10 @@ NIL
 1
 
 SLIDER
-18
-87
-190
-120
+36
+86
+208
+119
 dog
 dog
 0
@@ -104,10 +109,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-18
-129
-189
-162
+36
+128
+207
+161
 pig
 pig
 1
@@ -115,20 +120,20 @@ pig
 -1000
 
 CHOOSER
-18
-171
-189
-216
+36
+170
+207
+215
 horse
 horse
 "a" 1 [2 3] true
 2
 
 INPUTBOX
-18
-226
-188
-286
+36
+225
+206
+285
 cow
 NIL
 1
@@ -136,10 +141,10 @@ NIL
 String
 
 MONITOR
-18
-296
-186
-341
+36
+295
+204
+340
 NIL
 snake
 17
@@ -147,29 +152,29 @@ snake
 11
 
 OUTPUT
-18
-349
-184
-399
+32
+505
+198
+555
 13
 
 TEXTBOX
-21
-15
-171
-33
-everything
+79
+18
+182
+36
+teacher-interface
 11
 0.0
 1
 
 BUTTON
-19
-407
-184
-440
-listen-animals
-listen-animals
+33
+563
+198
+596
+listen-students
+listen-students
 T
 1
 T
@@ -178,6 +183,34 @@ NIL
 NIL
 NIL
 NIL
+1
+
+PLOT
+19
+348
+219
+498
+plot 2
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles"
+
+TEXTBOX
+260
+17
+714
+115
+Step 1: Push the \"listen-students\" forever button.\nStep 2: Open the Command Center.\nStep 3: Watch for messages sent from students.\nStep 4: Press the \"share-with-students\" button, and the teacher values will overwrite the student values.
+11
+0.0
 1
 
 @#$#@#$#@
@@ -528,10 +561,10 @@ NetLogo 6.0
 @#$#@#$#@
 @#$#@#$#@
 VIEW
-184
-15
-436
-258
+236
+143
+488
+386
 0
 0
 0
@@ -550,10 +583,10 @@ VIEW
 16
 
 VIEW
-185
-268
-414
-455
+237
+395
+487
+583
 0
 0
 0
@@ -572,10 +605,10 @@ VIEW
 16
 
 BUTTON
-18
-51
-157
-84
+39
+49
+178
+82
 meow
 NIL
 NIL
@@ -586,10 +619,10 @@ NIL
 NIL
 
 SLIDER
-19
-92
-156
-125
+40
+90
+177
+123
 woof
 woof
 0.0
@@ -601,10 +634,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-19
-133
-156
-166
+40
+131
+177
+164
 oink
 oink
 1
@@ -612,20 +645,20 @@ oink
 -1000
 
 CHOOSER
-18
-173
-156
-218
+39
+171
+177
+216
 neigh
 neigh
 \"a\" 1 [2 3] true
 0
 
 INPUTBOX
-18
-226
-158
-286
+39
+224
+179
+284
 moo
 NIL
 1
@@ -633,21 +666,48 @@ NIL
 String
 
 MONITOR
-18
-295
-158
-344
+39
+293
+179
+342
 sssss
 NIL
 3
 1
 
 TEXTBOX
-19
-19
-169
-37
-client-everything
+67
+20
+217
+38
+student interface
+11
+0.0
+1
+
+PLOT
+10
+359
+210
+509
+plot 2
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+
+TEXTBOX
+238
+18
+642
+130
+Step 1: Push the button,\nStep 2: Select the slider, switcher and chooser. \nStep 3: Add text to the input box. \nStep 4: Click on the View.\nStep 5: If the teacher has the \"listen-students\" forever button running, then widget click data will appear in the teacher's Command Center.\nStep 6: If the teacher presses \"share-with-students\", the teacher values will overtake the student values. (Note: this does not work for all widgets.)
 11
 0.0
 1

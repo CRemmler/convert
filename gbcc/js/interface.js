@@ -83,7 +83,6 @@ Interface = (function() {
     $(".netlogo-slider:not(.hidden)").click(function(e){clickHandler(this, e, "slider");});
     $(".netlogo-switcher:not(.hidden)").click(function(e){clickHandler(this, e, "switcher");});
     $(".netlogo-chooser:not(.hidden)").click(function(e){clickHandler(this, e, "chooser");});
-    //$(".netlogo-monitor:not(.hidden)").addClass("student-input");
     $(".netlogo-input-box:not(.hidden)").click(function(e){clickHandler(this, e, "inputBox");});
     $(".netlogo-view-container:not(.hidden)").click(function(e){clickHandler(this, e, "view");});
   }
@@ -102,45 +101,29 @@ Interface = (function() {
   
   function clearRoom(roomName) {
     socket.emit("clear room", {roomName: roomName});
-    //$("#submitRoomString").trigger("click");
   }
   
   function clickHandler(thisElement, e, widget) {
     var value;
     var id = $(thisElement).attr("id");
-    var label = $("#"+id+" .netlogo-label").text();
-    switch (widget) {
-      case "button":
-        value = "";
-        break;
-      case "slider":
-        value = $("#"+id+" input").val();
-        break;
-      case "switcher":
-        value = $("#"+id+" input").val();
-        break;
-      case "chooser":
-        value = $("#"+id+" option:selected").val();
-        break;
-      case "inputBox":
-        value = $("#"+id+" textarea").val();
-        break;
-      case "view":
-        label = "view";
-        position = [ e.clientX, e.clientY ];
-        offset = $(thisElement).offset();
-        offset = [ offset.left, offset.top ];
-        pixelDimensions = [ parseFloat($(thisElement).css("width")), parseFloat($(thisElement).css("height")) ];
-        percent = [ ((position[0] - offset[0]) / pixelDimensions[0]), ((position[1] - offset[1]) / pixelDimensions[1]) ]; 
-        patchDimensions = [ universe.model.world.worldwidth, universe.model.world.worldheight ];
-        value = [ (percent[0] * patchDimensions[0]) +  universe.model.world.minpxcor, 
-        universe.model.world.maxpycor - (percent[1] * patchDimensions[1]) ]
-        break;
-    }
-    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
-    if ((widget != "button") && (widget != "canvas")) {
+    var label = $("#"+id+" .netlogo-label").text();  
+    if (widget === "view") {
+      label = "view";
+      position = [ e.clientX, e.clientY ];
+      offset = $(thisElement).offset();
+      offset = [ offset.left, offset.top ];
+      pixelDimensions = [ parseFloat($(thisElement).css("width")), parseFloat($(thisElement).css("height")) ];
+      percent = [ ((position[0] - offset[0]) / pixelDimensions[0]), ((position[1] - offset[1]) / pixelDimensions[1]) ]; 
+      patchDimensions = [ universe.model.world.worldwidth, universe.model.world.worldheight ];
+      value = [ (percent[0] * patchDimensions[0]) +  universe.model.world.minpxcor, 
+      universe.model.world.maxpycor - (percent[1] * patchDimensions[1]) ]
+    } else if (widget === "button" ) {
+      value = "";
+    } else {
+      value = world.observer.getGlobal(label);
       socket.emit("send reporter", {hubnetMessageSource: "server", hubnetMessageTag: label, hubnetMessage:value});
     }
+    socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
   }
   
   function setupItems() {

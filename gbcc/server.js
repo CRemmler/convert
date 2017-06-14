@@ -97,7 +97,6 @@ io.on('connection', function(socket){
 									hubnetMessageSource: roomData[myRoom].canvasOrder[j],
 									hubnetMessageTag: "canvas",
 									hubnetMessage: roomData[myRoom].userData[roomData[myRoom].canvasOrder[j]]["canvas"],
-									components: config.clientJs.reporterComponents,
 									userId: myUserId,
 									activityType: activityType
 								};
@@ -170,7 +169,6 @@ io.on('connection', function(socket){
 					hubnetMessageSource: myUserId,
 					hubnetMessageTag: data.hubnetMessageTag,
 					hubnetMessage: data.hubnetMessage,
-					components: config.clientJs.reporterComponents,
 					userId: myUserId,
 					activityType: activityType
 				};
@@ -202,7 +200,6 @@ io.on('connection', function(socket){
 				hubnetMessageSource: data.hubnetMessageSource,
 				hubnetMessageTag: data.hubnetMessageTag,
 				hubnetMessage: roomData[myRoom].userData[data.hubnetMessageSource][data.hubnetMessageTag],
-				components: config.clientJs.reporterComponents,
 				userId: myUserId,
 				activityType: activityType
 			};

@@ -22,8 +22,6 @@ app.post('/fileupload',function(req,res){
      var indexFile;
      var loginWidgerRange, studentWidgetRange, teacherWidgetRange;
      var widgetList = [];
-     var reporterComponentList = [];
-     var globalsFound = false;
      fs.readFileAsync(nlogoFileName, "utf8").then(function(data) {
         var array = data.toString().split("\n");
         nlogoFile = "";
@@ -34,11 +32,12 @@ app.post('/fileupload',function(req,res){
         var newWidget = false;
         var lastWidgetType = "";
         var label;
-        var widgets = ["BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUTBOX", "MONITOR", "OUTPUT", "TEXTBOX", "VIEW", "GRAPHICS-WINDOW"];
+        var widgets = ["BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUTBOX", "MONITOR", "OUTPUT", "TEXTBOX", "VIEW", "GRAPHICS-WINDOW", "PLOT"];
         var viewWidgets = ["VIEW", "GRAPHICS-WINDOW"];
         for(i in array) {
+          // buttons on the client need a client-procedure, to avoid a console error
           if (arrayIndex === 0 && array[i] === "@#$#@#$#@") { nlogoFile = nlogoFile + "\n\nto client-procedure\nend\n"; }
-          nlogoFile = nlogoFile + array[i] + "\n";
+          nlogoFile += array[i] + "\n";
           if (arrayIndex === 1) { if (widgets.indexOf(array[i]) > -1) { numTeacherWidgets++; } }
           if (arrayIndex === 8) {
             if ((widgets.indexOf(array[i]) > -1) || (array[i]==="@#$#@#$#@")) { 
@@ -49,30 +48,9 @@ app.post('/fileupload',function(req,res){
                   widget = widget.replace("NIL","client-procedure");
                   if (widget.split("NIL").length === 5) { widget = widget.replace("NIL\nNIL","NIL\nNIL\nNIL"); }
                   break;
-                case "SLIDER": 
-                  reporterComponentList.push([label, "#netlogo-slider-"+(numTeacherWidgets+numStudentWidgets - 2)]);
-                  break;
-                case "SWITCH": 
-                  reporterComponentList.push([label, "#netlogo-switch-"+(numTeacherWidgets+numStudentWidgets - 2)]);
-                  break;
-                case "CHOOSER": 
-                  reporterComponentList.push([label, "#netlogo-chooser-"+(numTeacherWidgets+numStudentWidgets - 2)]);
-                  break;
-                case "INPUTBOX": 
-                  reporterComponentList.push([label, "#netlogo-inputBox-"+(numTeacherWidgets+numStudentWidgets - 2)]);
-                  break;
                 case "MONITOR": 
-                  widget = widget.substr(0,widget.lastIndexOf("\n"));
-                  widget = widget.substr(0,widget.lastIndexOf("\n"));
-                  widget = widget.substr(0,widget.lastIndexOf("\n"));
-                  widget = widget.substr(0,widget.lastIndexOf("\n"));
-                  widget = widget.replace("NIL",'""');
-                  widget = widget+'\n0\n1\n11\n\n';
-                  reporterComponentList.push([label, "#netlogo-monitor-"+(numTeacherWidgets+numStudentWidgets - 2)+" output"]);
+                  widget = widget.replace("NIL",label+"\n1");
                   break;
-                case "OUTPUT": break;
-                case "TEXTBOX": break;
-                case "VIEW": break;
               }
               if ((widget != "") && (viewWidgets.indexOf(lastWidgetType) === -1)) { 
                 widgetList.push(widget); 
@@ -81,7 +59,7 @@ app.post('/fileupload',function(req,res){
               lastWidgetType = array[i];
               label = array[(parseInt(i) + 5).toString()];
             }  
-            if (lastWidgetType != "VIEW") { widget = widget + array[i] + "\n"; }
+            if (lastWidgetType != "VIEW") { widget += array[i] + "\n"; }
 
           }
           if (array[i] === "@#$#@#$#@") { arrayIndex++; }
@@ -98,41 +76,38 @@ app.post('/fileupload',function(req,res){
             arrayIndex++; 
             if (arrayIndex === 2) {
               for (var j=0; j<widgetList.length; j++) {
-                nlogoFile = nlogoFile + widgetList[j] + "\n";
+                nlogoFile += widgetList[j] + "\n";
               }
             } 
           }
-          nlogoFile = nlogoFile + array[i] + "\n";
+          nlogoFile += array[i] + "\n";
         }
-        //console.log(nlogoFile);
+        console.log(nlogoFile);
       }).then(function() {
       fs.readFileAsync("gbcc/config.json", "utf8").then(function(data) {
          var array = data.toString().split("\n");
          var configData = data;
          configFile = "";
          for(var i in array) {
-           configFile = configFile + array[i] + "\n";
+           configFile += array[i] + "\n";
            if (array[i].includes("loginComponents")) { configFile = configFile + '      "componentRange": [' +loginWidgetRange + "]\n" }
            if (array[i].includes("teacherComponents")) { configFile = configFile + '      "componentRange": [' +teacherWidgetRange + "]\n" }
            if (array[i].includes("studentComponents")) { configFile = configFile + '      "componentRange": [' +studentWidgetRange + "]\n" }
-           if (array[i].includes("reporterComponents")) {
-             for (var j=0; j<reporterComponentList.length; j++) {
-               configFile = configFile + '       "'+reporterComponentList[j][0]+'": "'+reporterComponentList[j][1]+'"';
-               configFile = (j+1 != reporterComponentList.length) ? configFile +',\n' : configFile +'\n';
-             }
-           }
          }
          //console.log(configFile);
       }).then(function() {
       fs.readFileAsync("gbcc/index1.html", "utf8").then(function(data) {
          indexFile = "";
          var array = data.toString().split("\n");
-         for (i in array) { indexFile = indexFile + array[i] + "\n"; }
-         indexFile = indexFile + nlogoFile;
+         for (i in array) { indexFile += array[i] + "\n"; }
+         indexFile += nlogoFile;
+         indexFile += "\ndocument.title = '"+nlogoFileName+"';\n<script>";         
+         indexFile += "\n$('head title').text('"+nlogoFileName+"')";
+         indexFile += "\n<script type='text/nlogo' id='nlogo-code' data-filename="+nlogoFileName+">";
       }).then(function() {
       fs.readFileAsync("gbcc/index3.html", "utf8").then(function(data) {
          var array = data.toString().split("\n");
-         for (i in array) { indexFile = indexFile + array[i] + "\n"; }
+         for (i in array) { indexFile += array[i] + "\n"; }
       }).then(function() {
         var zip = new JSZip();
         zip.file("config.json", configFile);
@@ -160,7 +135,7 @@ app.post('/fileupload',function(req,res){
            zip.file("server.js", data);
         }).then(function() {
         zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-          .pipe(fs.createWriteStream(guid+'.zip'))
+          /*.pipe(fs.createWriteStream(guid+'.zip'))
           .on('finish', function () {
             res.download(guid+'.zip', function() {
               var fullPath= __dirname + '/'+guid+'.zip';
@@ -169,7 +144,7 @@ app.post('/fileupload',function(req,res){
                 console.log(fullPath + " deleted");
               });
             });
-          });
+          });*/
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);
