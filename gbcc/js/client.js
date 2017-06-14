@@ -53,7 +53,7 @@ jQuery(document).ready(function() {
 
   // students display reporters
   socket.on("display reporter", function(data) {
-    console.log("display reporter "+data.hubnetMessageTag+" "+data.hubnetMessage);
+    //console.log("display reporter "+data.hubnetMessageTag+" "+data.hubnetMessage);
     if (data.hubnetMessageTag === "canvas") {
       if ($("#image-"+data.hubnetMessageSource).length === 0) {
         var canvasImg = new Image();
@@ -69,7 +69,7 @@ jQuery(document).ready(function() {
       }
     } else {
       if (activityType === "hubnet") {
-        console.log(data.hubnetMessageTag+" "+data.hubnetMessage);
+        //console.log(data.hubnetMessageTag+" "+data.hubnetMessage);
         world.observer.setGlobal(data.hubnetMessageTag,data.hubnetMessage);
       } else {
         // WARNING: gbcc-set-globals overwrites globals, may not want this feature

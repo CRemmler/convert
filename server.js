@@ -16,6 +16,7 @@ app.post('/fileupload',function(req,res){
    var form = new formidable.IncomingForm();
    var guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
    form.parse(req, function(err, fields, files) {
+     var title = files.filetoupload.name;
      nlogoFileName = files.filetoupload.path || "error";
      var configFile;
      var nlogoFile;
@@ -82,7 +83,7 @@ app.post('/fileupload',function(req,res){
           }
           nlogoFile += array[i] + "\n";
         }
-        console.log(nlogoFile);
+        //console.log(nlogoFile);
       }).then(function() {
       fs.readFileAsync("gbcc/config.json", "utf8").then(function(data) {
          var array = data.toString().split("\n");
@@ -100,10 +101,9 @@ app.post('/fileupload',function(req,res){
          indexFile = "";
          var array = data.toString().split("\n");
          for (i in array) { indexFile += array[i] + "\n"; }
+         indexFile += "\ndocument.title = '"+title+"';\n</script>";         
+         indexFile += "\n<script type='text/nlogo' id='nlogo-code' data-filename='"+title+"'>";
          indexFile += nlogoFile;
-         indexFile += "\ndocument.title = '"+nlogoFileName+"';\n<script>";         
-         indexFile += "\n$('head title').text('"+nlogoFileName+"')";
-         indexFile += "\n<script type='text/nlogo' id='nlogo-code' data-filename="+nlogoFileName+">";
       }).then(function() {
       fs.readFileAsync("gbcc/index3.html", "utf8").then(function(data) {
          var array = data.toString().split("\n");
@@ -135,7 +135,7 @@ app.post('/fileupload',function(req,res){
            zip.file("server.js", data);
         }).then(function() {
         zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-          /*.pipe(fs.createWriteStream(guid+'.zip'))
+          .pipe(fs.createWriteStream(guid+'.zip'))
           .on('finish', function () {
             res.download(guid+'.zip', function() {
               var fullPath= __dirname + '/'+guid+'.zip';
@@ -144,7 +144,7 @@ app.post('/fileupload',function(req,res){
                 console.log(fullPath + " deleted");
               });
             });
-          });*/
+          });
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);
