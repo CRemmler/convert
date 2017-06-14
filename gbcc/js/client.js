@@ -68,7 +68,12 @@ jQuery(document).ready(function() {
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
-      if (activityType === "hubnet") {
+      var matchingMonitors = session.widgetController.widgets().filter(function(x) { return x.display === data.hubnetMessageTag; });
+      if (matchingMonitors.length > 0) {
+        matchingMonitors[0].compiledSource = data.hubnetMessage;
+        matchingMonitors[0].reporter       = function() { return data.hubnetMessage; };
+      }
+      else if (activityType === "hubnet") {
         //console.log(data.hubnetMessageTag+" "+data.hubnetMessage);
         world.observer.setGlobal(data.hubnetMessageTag.toLowerCase(),data.hubnetMessage);
       } else {

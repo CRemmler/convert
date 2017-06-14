@@ -49,8 +49,8 @@ app.post('/fileupload',function(req,res){
                   widget = widget.replace("NIL","client-procedure");
                   if (widget.split("NIL").length === 5) { widget = widget.replace("NIL\nNIL","NIL\nNIL\nNIL"); }
                   break;
-                case "MONITOR": 
-                  widget = widget.substr(0,widget.indexOf("NIL"))+label+"\n0\n1\n11\n";
+                case "MONITOR":
+                  widget = widget.substr(0,widget.indexOf("NIL"))+'""'+"\n0\n1\n11\n";
                   //widget = widget.replace("NIL",label+"\n0");
                   break;
               }
