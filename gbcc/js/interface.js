@@ -6,7 +6,7 @@ Interface = (function() {
     var roomButtonHtml, roomButtonId;
     setupItems();
     $(".netlogo-tab-area").addClass("hidden");
-    $(".netlogo-export-wrapper").css("display","none");   
+    $(".netlogo-export-wrapper").css("display","none");
     $(".netlogo-speed-slider").css("display","none");
     $(".admin-body").css("display","inline");
     // hide all widgets
@@ -38,7 +38,7 @@ Interface = (function() {
     " type='button' style='position: absolute; left: 186px; top: 421px; width: 96px; height: 33px;'>"+
     "<div class='netlogo-button-agent-context'></div> <span class='netlogo-label'>Create</span> </button>";
     $("body").append(widget);
-    $("#netlogo-button-"+index).on("click", function() { 
+    $("#netlogo-button-"+index).on("click", function() {
       var myRoom = $(".create-room-input").val();
       socket.emit("enter room", {room: myRoom});
     });
@@ -73,7 +73,7 @@ Interface = (function() {
     $(".netlogo-tab-area").removeClass("hidden");
     $(".admin-body").css("display","none");
   }
-  
+
   function displayStudentInterface(room, components) {
     showItems(components.componentRange[0], components.componentRange[1]);
     $("#netlogo-title").append(" Room: "+room);
@@ -86,36 +86,36 @@ Interface = (function() {
     $(".netlogo-input-box:not(.hidden)").click(function(e){clickHandler(this, e, "inputBox");});
     $(".netlogo-view-container:not(.hidden)").click(function(e){clickHandler(this, e, "view");});
   }
-  
+
   function displayDisconnectedInterface() {
     $(".admin-body").css("display","inline");
     $(".admin-body").html("You have been disconnected. Please refresh the page to continue.");
     $("#netlogo-model-container").addClass("hidden");
   }
-  
+
   function displayAdminInterface(rooms) {
     $("#noRoomsChosen").css("display","none");
     $("#netlogo-model-container").addClass("hidden");
     $("#admin-data").html(rooms);
   }
-  
+
   function clearRoom(roomName) {
     socket.emit("clear room", {roomName: roomName});
   }
-  
+
   function clickHandler(thisElement, e, widget) {
     var value;
     var id = $(thisElement).attr("id");
-    var label = $("#"+id+" .netlogo-label").text();  
+    var label = $("#"+id+" .netlogo-label").text();
     if (widget === "view") {
       label = "view";
       position = [ e.clientX, e.clientY ];
       offset = $(thisElement).offset();
       offset = [ offset.left, offset.top ];
       pixelDimensions = [ parseFloat($(thisElement).css("width")), parseFloat($(thisElement).css("height")) ];
-      percent = [ ((position[0] - offset[0]) / pixelDimensions[0]), ((position[1] - offset[1]) / pixelDimensions[1]) ]; 
+      percent = [ ((position[0] - offset[0]) / pixelDimensions[0]), ((position[1] - offset[1]) / pixelDimensions[1]) ];
       patchDimensions = [ universe.model.world.worldwidth, universe.model.world.worldheight ];
-      value = [ (percent[0] * patchDimensions[0]) +  universe.model.world.minpxcor, 
+      value = [ (percent[0] * patchDimensions[0]) +  universe.model.world.minpxcor,
       universe.model.world.maxpycor - (percent[1] * patchDimensions[1]) ]
     } else if (widget === "button" ) {
       value = "";
@@ -125,12 +125,12 @@ Interface = (function() {
     }
     socket.emit("send command", {hubnetMessageTag: label, hubnetMessage:value});
   }
-  
+
   function setupItems() {
     var key, value, id;
     $(".netlogo-widget").each(function() {
       id = $(this).attr("id");
-      if (id) { 
+      if (id) {
         key = parseInt(id.replace(/\D/g,''));
         if (key) {
           value = id;
