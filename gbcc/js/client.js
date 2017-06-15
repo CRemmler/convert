@@ -68,7 +68,9 @@ jQuery(document).ready(function() {
         $("#image-"+data.hubnetMessageSource).attr("src", data.hubnetMessage);
       }
     } else {
-      var matchingMonitors = session.widgetController.widgets().filter(function(x) { return x.display === data.hubnetMessageTag; });
+      var matchingMonitors = session.widgetController.widgets().filter(function(x) { 
+        return x.type === "monitor" && x.display === data.hubnetMessageTag; 
+      });
       if (matchingMonitors.length > 0) {
         matchingMonitors[0].compiledSource = data.hubnetMessage;
         matchingMonitors[0].reporter       = function() { return data.hubnetMessage; };
