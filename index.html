@@ -47,24 +47,19 @@
       <br>In a command line, navigate to the unzipped folder.
       <br>Type <span class='code'>npm install</span> to install dependencies.
       <br>This reads the package.json file and installs dependencies in a node-modules folder.
-      <br>Type <span class='code'>node server.js</span> to run the server.
+      <br>Type <span class='code'>node server.js</span> to run the server (use ctrl-c to stop it)
       <br>Open a browser and go to <span class='code'>localhost:3000</span>
     </div>
     <p>
-    <div class='blue'><b>4. Troubleshoot.</b>
-      <br>If you want to stop the server, type ctrl-c.
-      <br>If you get an error when attempting to open the webpage <span class='code'>hubnet-reset is not defined</span>,
-      then that command is not implemented in NetLogo Hubnet Web, and you should comment it out.
-      <br>In index.html, find the NetLogo code and comment it out <span class='code'>;; hubnet-reset</span>.
-      <br>If you get this error: <span class='code'>This non-standard character is not allowed.</span>, then
-      look in a client CHOOSER and remove the escape character. Change \"b\" to "b"
+    <div class='blue'><b>5. Troubleshoot </b>
+      <br>If there is an error like <span class='code'>There is already a global variable called STEP-SIZE</span>, then comment out that global variable.
     </div>
     <p>
-    <div class='indigo'><b>5. Host NetLogo Hubnet Web App remotely.</b>
+    <div class='indigo'><b>6. Host NetLogo Hubnet Web App remotely.</b>
       <br>Build and deploy on Heroku.com
     </div>
     <p>
-    <div class='violet'><b>6. Share Activities</b>
+    <div class='violet'><b>7. Share Activities</b>
       <br>Group-based Cloud Computing
       <br><a href="www.remmler.org/gbcc">www.remmler.org/gbcc</a>
       <br>c_remmler@yahoo.com
