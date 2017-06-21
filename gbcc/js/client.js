@@ -47,8 +47,9 @@ jQuery(document).ready(function() {
     universe.repaint();
   });
 
-  socket.on("display admin", function(data) {
-    $("#adminData").html(data.roomData);
+  // show or hide student view
+  socket.on("display my view", function(data) {
+    (data.display) ? $(".netlogo-view-container").css("display","block") : $(".netlogo-view-container").css("display","none");
   });
 
   // students display reporters

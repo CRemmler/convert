@@ -188,7 +188,9 @@ io.on('connection', function(socket){
 	// pass reporter from student to server
 	socket.on("request user data", function(data) {
 		var myRoom = socket.myRoom;
-		socket.emit("accept user data", {userId: data.userId, userData: roomData[myRoom].userData[data.userId]});
+		if (roomData[myRoom].userData != undefined) {
+			socket.emit("accept user data", {userId: data.userId, userData: roomData[myRoom].userData[data.userId]});
+		}
 	});
 
 	// pass reporter from student to server
@@ -225,7 +227,12 @@ io.on('connection', function(socket){
 	socket.on("admin clear room", function(data) {
 		clearRoom(data.roomName);
 	});
-
+	
+	socket.on("display view", function(data) {
+		var myRoom = socket.myRoom;
+		socket.to(myRoom+"-student").emit("display my view", {"display":data.display});
+	});
+	
 	// user exits
 	socket.on('disconnect', function () {
 		//clearInterval(myTimer);

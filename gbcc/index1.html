@@ -1691,6 +1691,12 @@ img.link-img {
               }
           }
         });
+        // add show/hide client view
+        $(".netlogo-view-container").append("<span class='teacherOnly hubnetOnly' style='float:right'><input id='shareClientView' checked type='checkbox'>Share</span>");
+        $(".netlogo-view-container").css("width", $(".netlogo-view-container canvas").css("width"));
+        $("#shareClientView").click(function() {
+          ($(this).prop("checked")) ? socket.emit('display view', {'display':true}) : socket.emit('display view', {'display':false});
+        });
       });
     </script>
     
@@ -47270,10 +47276,8 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
     };
     
     HubnetManager.prototype.gbccGetGlobals = function(messageSource) {
-      console.log("gbccGetGlobals " + userId);
       var globalVars = world.observer.varNames();
       for (var globalVar in globalVars) {
-        console.log("get "+globalVars[globalVar]+" "+userId);
         socket.emit("get reporter", {
           hubnetMessageSource: messageSource, 
           hubnetMessageTag: globalVars[globalVar], 

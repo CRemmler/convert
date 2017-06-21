@@ -63,6 +63,8 @@ Interface = (function() {
     if (activityType === "hubnet") {
       $(".netlogo-gallery").prev().remove();
       $(".netlogo-gallery").remove();
+    } else {
+      $(".hubnetOnly").css("display","none");
     }
   }
 
@@ -79,6 +81,7 @@ Interface = (function() {
     $("#netlogo-title").append(" Room: "+room);
     $(".netlogo-view-container").removeClass("hidden");
     $(".admin-body").css("display","none");
+    $(".teacherOnly").css("display","none");
     $(".netlogo-button:not(.hidden)").click(function(e){clickHandler(this, e, "button");});
     $(".netlogo-slider:not(.hidden)").click(function(e){clickHandler(this, e, "slider");});
     $(".netlogo-switcher:not(.hidden)").click(function(e){clickHandler(this, e, "switcher");});
