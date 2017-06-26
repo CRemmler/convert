@@ -3,6 +3,9 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express = require('express');
 var config = require('./config.json');
+var exportworld = require('./export/exportworld.js');
+var formidable = require('formidable');
+var fs = require("node-fs");
 const PORT = process.env.PORT || 3000;
 var myTimer;
 var roomData = {};
@@ -60,6 +63,7 @@ io.on('connection', function(socket){
 				roomData[myRoom].patches = {};
 				roomData[myRoom].userData = {};
 				roomData[myRoom].canvasOrder = [];
+				roomData[myRoom].settings = {};
 			}
 			// declare myUserType, first user in is a teacher, rest are students
 			socket.myUserType = (countUsers(myRoom) === 0) ? "teacher" : "student";
@@ -80,12 +84,14 @@ io.on('connection', function(socket){
 				rooms = [];
 				for (var key in roomData) { rooms.push(key); }
 				socket.to("login").emit("display interface", {userType: "login", rooms: rooms, components: config.interfaceJs.loginComponents, activityType: activityType});
+				if (activityType === "hubnet") { roomData[myRoom].settings.displayView = true;}
 			} else {
 				if (activityType === "hubnet") {
 					// send student a student interface
 					socket.emit("display interface", {userType: "student", room: myRoom, components: config.interfaceJs.studentComponents});
 					// send teacher a hubnet-enter-message
 					socket.to(myRoom+"-teacher").emit("execute command", {hubnetMessageSource: myUserId, hubnetMessageTag: "hubnet-enter-message", hubnetMessage: ""});
+					socket.emit("display my view", {"display":roomData[myRoom].settings.displayView});
 				} else {
 					// it's gbcc, so send student a teacher interface
 					socket.emit("display interface", {userType: "teacher", room: myRoom, components: config.interfaceJs.teacherComponents});
@@ -173,7 +179,11 @@ io.on('connection', function(socket){
 					activityType: activityType
 				};
 			 	if (destination === "all-users"){
-					roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
+					if (( data.hubnetMessageTag === "canvas") && (roomData[myRoom].userData[myUserId]["canvas"] === undefined)) {
+						roomData[myRoom].userData[myUserId].canvas = data.hubnetMessage;
+					} else {
+						roomData[myRoom].userData[myUserId][data.hubnetMessageTag] = data.hubnetMessage;
+					}
 					dataObject.hubnetMessage = data.hubnetMessage;
 					socket.to(myRoom+"-teacher").emit("display reporter", dataObject);
 					socket.to(myRoom+"-student").emit("display reporter", dataObject);
@@ -183,6 +193,14 @@ io.on('connection', function(socket){
 				}
 			}
 		}
+	});
+
+	app.post('/exportgbccworld', function(req,res){
+		var form = new formidable.IncomingForm();
+		form.parse(req, function(err, fields, files) {
+		 var myRoom = fields.roomname;
+		 exportworld.exportData(roomData[myRoom], myRoom, res);
+	 });
 	});
 
 	// pass reporter from student to server
@@ -230,6 +248,7 @@ io.on('connection', function(socket){
 	
 	socket.on("display view", function(data) {
 		var myRoom = socket.myRoom;
+		roomData[myRoom].settings.displayView = data.display;
 		socket.to(myRoom+"-student").emit("display my view", {"display":data.display});
 	});
 	
@@ -238,7 +257,7 @@ io.on('connection', function(socket){
 		//clearInterval(myTimer);
 		var myRoom = socket.myRoom;
 		var myUserId = socket.id;
-		if (roomData[myRoom] != undefined) {
+		if (roomData[myRoom] != undefined && roomData[myRoom].userData[myUserId] != undefined) {
 			roomData[myRoom].userData[myUserId].exists = false;
 		}
 		if (socket.myUserType === "teacher") {

@@ -70,6 +70,8 @@ Interface = (function() {
 
   function displayTeacherInterface(room, components) {
     showItems(components.componentRange[0], components.componentRange[1]);
+    if (activityType === "gbcc") { $(".netlogo-export-wrapper").css("display","block"); $(".exporthtml").css("display","none")} 
+    $(".roomNameInput").val(room);
     $("#netlogo-title").append(" Room: "+room);
     $(".netlogo-view-container").removeClass("hidden");
     $(".netlogo-tab-area").removeClass("hidden");

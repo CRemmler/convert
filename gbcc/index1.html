@@ -1658,7 +1658,8 @@ img.link-img {
     </div>
 </div>
 
-    <canvas id="miniCanvas" width="200" height="200" style="display:none"></canvas>
+    <canvas id="miniCanvas" width="500" height="500" style="display:none"></canvas>
+    <canvas id="miniSafariCanvas" width="200" height="200" style="display:none"></canvas>
     <div id="netlogo-model-container" style="display: inline-block; padding:0px"></div>
     <script type="text/javascript" src="js/tortoiseCompiler.js"></script>
     <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -47266,7 +47267,7 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
       console.log("gbccSetGlobals");
       var globalVars = world.observer.varNames();
       for (var globalVar in globalVars) {
-        console.log("set "+globalVars[globalVar]+" "+world.observer.getGlobal(globalVars[globalVar]));
+        //console.log("set "+globalVars[globalVar]+" "+world.observer.getGlobal(globalVars[globalVar]));
         socket.emit("send reporter", {
           hubnetMessageSource: "server", 
           hubnetMessageTag: globalVars[globalVar], 
@@ -47286,22 +47287,78 @@ c=e.buttons;A=0;if(e.enabled!==!1){for(b in c)a.addButton(c[b]);u(a,"destroy",a.
       }      
     };
     
+    var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+    var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
+    var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
+    var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+    var is_opera = navigator.userAgent.toLowerCase().indexOf("op") > -1;
+    if ((is_chrome)&&(is_safari)) { is_safari = false; }
+    if ((is_chrome)&&(is_opera)) { is_chrome = false; }
+
     // Supported: gbcc-broadcast ["canvas"]
-    // Not Supported: gbcc-broadcast [["plot" "populations"]]
+    // Supported: [["plot" "populations"]]
     // Not Supported: gbcc-broadcast [["plot" "Percent Similar"] ["plot" "Number-unhappy"] "canvas" ]
     HubnetManager.prototype.gbccBroadcast = function(args) {
-      console.log("gbccBroadcast " + args);
+      var miniCanvasId, miniCanvas, miniCtx, message;
+      var canvasLength, canvasWidth, imageQuality;
+      var svgData, img;
+      var plotWidth, plotHeight, ratio, max, width, length;
+      var plotName, matchingPlots;
       for (var i=0; i<args.length; i++) {
+        if (is_safari) {  
+          miniCanvasId = "miniSafariCanvas";
+          canvasLength = 200; canvasWidth = 200;
+          imageQuality = 0.5;
+        } else {
+          miniCanvasId = "miniCanvas";
+          canvasLength = 500; canvasWidth = 500;
+          imageQuality = 0.75;
+        }
         if ((typeof args[i] === "string") && (args[i] === "canvas")) {
-          var miniCanvas = document.getElementById("miniCanvas");
-          var miniCtx = miniCanvas.getContext('2d');
-          miniCtx.drawImage(document.getElementsByClassName("netlogo-canvas")[0], 0, 0, 200, 200);
-          message = document.getElementById("miniCanvas").toDataURL("image/jpeg");
+          miniCanvas = document.getElementById(miniCanvasId);
+          miniCtx = miniCanvas.getContext('2d');            
+          miniCtx.drawImage(document.getElementsByClassName("netlogo-canvas")[0], 0, 0, canvasLength, canvasWidth);
+          message = document.getElementById(miniCanvasId).toDataURL("image/jpeg", imageQuality); 
           socket.emit("send reporter", {
             hubnetMessageSource: "all-users", 
             hubnetMessageTag: "canvas", 
             hubnetMessage: message
-          });
+          }); 
+        }
+        if ((typeof args[i] === "object") && (args[i][0] === "plot")) {
+          if (args[i][1] && typeof args[i][1] === "string") {
+            plotName = args[i][1];
+            matchingPlots =  $("svg").filter(function() {
+              if ($(".highcharts-title tspan", this).text()){ return this; } 
+            });
+            plotWidth = $(matchingPlots[0]).width();
+            plotHeight = $(matchingPlots[0]).height();
+            ratio = plotWidth / plotHeight;
+            max = canvasWidth;
+            width = max;
+            height = max;
+            (plotWidth > plotHeight) ? height = width / ratio : width = height * ratio;
+            if (matchingPlots.length > 0) {
+              miniCanvas = document.getElementById(miniCanvasId);
+              miniCtx = miniCanvas.getContext('2d');      
+              img = document.createElement("img");
+              svgData = new XMLSerializer().serializeToString(matchingPlots[0]);
+              img.setAttribute("src","data:image/svg+xml;base64,"+btoa(unescape(encodeURIComponent(svgData))));
+              img.onload = function () {
+                miniCtx.fillStyle="#FFFFFF";
+                miniCtx.fillRect(0,0,max,max);
+                miniCtx.fillStyle="#000000";
+                miniCtx.fillRect(0,0,width,height + 2);
+                miniCtx.drawImage(img, 1, 1, width - 2, height);
+                message = document.getElementById(miniCanvasId).toDataURL("image/jpeg", imageQuality);  
+                socket.emit("send reporter", {
+                  hubnetMessageSource: "all-users", 
+                  hubnetMessageTag: "canvas", 
+                  hubnetMessage: message
+                });
+              }
+            }                      
+          }
         }
       }
     };
@@ -59314,7 +59371,7 @@ into the sorting code and caused a 25% performance hit in BZ Benchmark. --JAB (4
     })();
   };
 
-  template = "<div class=\"netlogo-model\" style=\"min-width: {{width}}px;\"\n     tabindex=\"1\" on-keydown=\"checkActionKeys\" on-focus=\"checkFocus\" on-blur=\"checkFocus\">\n  <div class=\"netlogo-header\">\n    <div class=\"netlogo-subheader\">\n      <div class=\"netlogo-powered-by\">\n        <a href=\"http://ccl.northwestern.edu/netlogo/\">\n          <img style=\"vertical-align: middle;\" alt=\"NetLogo\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAANcSURBVHjarJRdaFxFFMd/M/dj7252uxubKms+bGprVyIVbNMWWqkQqtLUSpQWfSiV+oVFTcE3DeiDgvoiUSiCYLH2oVoLtQ+iaaIWWtE2FKGkkSrkq5svN+sm7ma/7p3x4W42lEbjQw8MM8yc87/nzPnNFVprbqWJXyMyXuMqx1Ni6N3ny3cX8tOHNLoBUMvESoFI2Xbs4zeO1lzREpSrMSNS1zkBDv6uo1/noz1H7mpvS4SjprAl2AZYEqzKbEowBAgBAkjPKX2599JjT7R0bj412D0JYNplPSBD1G2SmR/e6u1ikEHG2vYiGxoJmxAyIGSCI8GpCItKimtvl2JtfGujDNkX6epuAhCjNeAZxM1ocPy2Qh4toGQ5DLU+ysiuA2S3P0KgJkjAgEAlQylAA64CG/jlUk6//ng4cNWmLK0yOPNMnG99Rs9LQINVKrD+wmke7upg55PrWP3eYcwrlykpKCkoelDy/HVegQhoABNAepbACwjOt72gZkJhypX70YDWEEklue+rbnYc2MiGp1upPfYReiJJUUG58gFXu4udch1wHcjFIgy0HyIjb2yvBpT2F6t+6+f+D15lW8c9JDo7iPSdgVIRLUqL2AyHDQAOf9hfbqxvMF98eT3RuTS1avHyl+Stcphe2chP9+4k/t3RbXVl3W+Ws17FY56/w3VcbO/koS/eZLoAqrQMxADZMTYOfwpwoWjL4+bCYcgssMqGOzPD6CIkZ/3SxTJ0ayFIN6/BnBrZb2XdE1JUgkJWkfrUNRJnPyc16zsbgPyXIUJBpvc+y89nk/S8/4nek3NPGeBWMwzGvhUPnP6RubRLwfODlqqx3LSCyee2MnlwMwA2RwgO5qouVcHmksUdJweYyi8hZkrUjgT5t/ejNq0jBsSqNWsKyT9uFtxw7Bs585d3g46KOeT2bWHmtd14KyP+5mzqpsYU3OyioACMhGiqPTMocsrHId9cy9BLDzKxq8X3ctMwlV6yKSHL4fr4dd0DeQBTBUgUkvpE1kVPbqkX117ZzuSaFf4zyfz5n9A4lk0yNU7vyb7jTy1kmFGipejKvh6h9n0W995ZPTu227hqmCz33xXgFV1v9NzI96NfjndWt7XWCB/7BSICFWL+j3lAofpCtfYFb6X9MwCJZ07mUsXRGwAAAABJRU5ErkJggg==\"/>\n          <span style=\"font-size: 16px;\">powered by NetLogo</span>\n        </a>\n      </div>\n    </div>\n    <editableTitle title=\"{{modelTitle}}\" isEditing=\"{{isEditing}}\"/>\n    {{# !readOnly }}\n    <div class=\"netlogo-export-wrapper\">\n      <span style=\"margin-right: 4px;\">Export:</span>\n      <button class=\"netlogo-ugly-button\" on-click=\"exportnlogo\">NetLogo</button>\n      <button class=\"netlogo-ugly-button\" on-click=\"exportHtml\">HTML</button>\n    </div>\n    {{/}}\n  </div>\n\n  <div id=\"netlogo-widget-context-menu\" class=\"widget-context-menu\">\n    <div id='widget-creation-disabled-message' style=\"display: none;\">\n      Widget creation is not yet available.  Check back soon.\n    </div>\n  </div>\n\n  <div class=\"netlogo-interface-unlocker\" style=\"display: none\" on-click=\"toggleInterfaceLock\"></div>\n\n  <label class=\"netlogo-widget netlogo-speed-slider\">\n    <span class=\"netlogo-label\">model speed</span>\n    <input type=\"range\" min=-1 max=1 step=0.01 value={{speed}} />\n    <tickCounter isVisible=\"{{primaryView.showTickCounter}}\"\n                 label=\"{{primaryView.tickCounterLabel}}\" value=\"{{ticks}}\" />\n  </label>\n\n  <div style=\"position: relative; width: {{width}}px; height: {{height}}px\"\n       class=\"netlogo-widget-container\"\n       on-contextmenu=\"showContextMenu:{{'widget-creation-disabled-message'}}\">\n    {{#widgetObj:key}}\n      {{# type === 'view'     }} <viewWidget    id=\"{{>widgetID}}\" dims=\"position: absolute; left: {{left}}; top: {{top}};\" widget={{this}} ticks=\"{{ticks}}\" /> {{/}}\n      {{# type === 'textBox'  }} <labelWidget   id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'switch'   }} <switchWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'button'   }} <buttonWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} errorClass=\"{{>errorClass}}\" ticksStarted=\"{{ticksStarted}}\"/> {{/}}\n      {{# type === 'slider'   }} <sliderWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} errorClass=\"{{>errorClass}}\" /> {{/}}\n      {{# type === 'chooser'  }} <chooserWidget id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'monitor'  }} <monitorWidget id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} errorClass=\"{{>errorClass}}\" /> {{/}}\n      {{# type === 'inputBox' }} <inputWidget   id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'plot'     }} <plotWidget    id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'output'   }} <outputWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} text=\"{{outputWidgetOutput}}\" /> {{/}}\n    {{/}}\n  </div>\n\n  <div class=\"netlogo-tab-area\" style=\"max-width: {{Math.max(width, 500)}}px\">\n    {{# !readOnly }}\n    <label class=\"netlogo-tab{{#showConsole}} netlogo-active{{/}}\">\n      <input id=\"console-toggle\" type=\"checkbox\" checked=\"{{showConsole}}\" />\n      <span class=\"netlogo-tab-text\">Command Center</span>\n    </label>\n    {{#showConsole}}\n      <console output=\"{{consoleOutput}}\"/>\n    {{/}}\n    {{/}}\n    <label class=\"netlogo-tab{{#showCode}} netlogo-active{{/}}\">\n      <input id=\"code-tab-toggle\" type=\"checkbox\" checked=\"{{ showCode }}\" />\n      <span class=\"netlogo-tab-text\">NetLogo Code</span>\n    </label>\n    {{#showCode}}\n      <editor code='{{code}}' lastCompiledCode='{{lastCompiledCode}}' readOnly='{{readOnly}}' />\n    {{/}}\n             <label class=\"netlogo-tab{{#showGallery}} netlogo-active{{/}}\">\n      <input id=\"gallery-toggle\" type=\"checkbox\" checked=\"{{ showGallery }}\" />\n      <span class=\"netlogo-tab-text\">Gallery</span>\n    </label>\n            <div class=\"netlogo-gallery netlogo-tab-content\"></div>     \n          <label class=\"netlogo-tab{{#showInfo}} netlogo-active{{/}}\">\n      <input id=\"info-toggle\" type=\"checkbox\" checked=\"{{ showInfo }}\" />\n      <span class=\"netlogo-tab-text\">Model Info</span>\n    </label>\n    {{#showInfo}}\n      <infotab rawText='{{info}}' editing='false' /> \n    {{/}}\n  </div>\n</div>";
+  template = "<div class=\"netlogo-model\" style=\"min-width: {{width}}px;\"\n     tabindex=\"1\" on-keydown=\"checkActionKeys\" on-focus=\"checkFocus\" on-blur=\"checkFocus\">\n  <div class=\"netlogo-header\">\n    <div class=\"netlogo-subheader\">\n      <div class=\"netlogo-powered-by\">\n        <a href=\"http://ccl.northwestern.edu/netlogo/\">\n          <img style=\"vertical-align: middle;\" alt=\"NetLogo\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAANcSURBVHjarJRdaFxFFMd/M/dj7252uxubKms+bGprVyIVbNMWWqkQqtLUSpQWfSiV+oVFTcE3DeiDgvoiUSiCYLH2oVoLtQ+iaaIWWtE2FKGkkSrkq5svN+sm7ma/7p3x4W42lEbjQw8MM8yc87/nzPnNFVprbqWJXyMyXuMqx1Ni6N3ny3cX8tOHNLoBUMvESoFI2Xbs4zeO1lzREpSrMSNS1zkBDv6uo1/noz1H7mpvS4SjprAl2AZYEqzKbEowBAgBAkjPKX2599JjT7R0bj412D0JYNplPSBD1G2SmR/e6u1ikEHG2vYiGxoJmxAyIGSCI8GpCItKimtvl2JtfGujDNkX6epuAhCjNeAZxM1ocPy2Qh4toGQ5DLU+ysiuA2S3P0KgJkjAgEAlQylAA64CG/jlUk6//ng4cNWmLK0yOPNMnG99Rs9LQINVKrD+wmke7upg55PrWP3eYcwrlykpKCkoelDy/HVegQhoABNAepbACwjOt72gZkJhypX70YDWEEklue+rbnYc2MiGp1upPfYReiJJUUG58gFXu4udch1wHcjFIgy0HyIjb2yvBpT2F6t+6+f+D15lW8c9JDo7iPSdgVIRLUqL2AyHDQAOf9hfbqxvMF98eT3RuTS1avHyl+Stcphe2chP9+4k/t3RbXVl3W+Ws17FY56/w3VcbO/koS/eZLoAqrQMxADZMTYOfwpwoWjL4+bCYcgssMqGOzPD6CIkZ/3SxTJ0ayFIN6/BnBrZb2XdE1JUgkJWkfrUNRJnPyc16zsbgPyXIUJBpvc+y89nk/S8/4nek3NPGeBWMwzGvhUPnP6RubRLwfODlqqx3LSCyee2MnlwMwA2RwgO5qouVcHmksUdJweYyi8hZkrUjgT5t/ejNq0jBsSqNWsKyT9uFtxw7Bs585d3g46KOeT2bWHmtd14KyP+5mzqpsYU3OyioACMhGiqPTMocsrHId9cy9BLDzKxq8X3ctMwlV6yKSHL4fr4dd0DeQBTBUgUkvpE1kVPbqkX117ZzuSaFf4zyfz5n9A4lk0yNU7vyb7jTy1kmFGipejKvh6h9n0W995ZPTu227hqmCz33xXgFV1v9NzI96NfjndWt7XWCB/7BSICFWL+j3lAofpCtfYFb6X9MwCJZ07mUsXRGwAAAABJRU5ErkJggg==\"/>\n          <span style=\"font-size: 16px;\">powered by NetLogo</span>\n        </a>\n      </div>\n    </div>\n    <editableTitle title=\"{{modelTitle}}\" isEditing=\"{{isEditing}}\"/>\n    {{# !readOnly }}\n    <div class=\"netlogo-export-wrapper\">\n      <span style=\"margin-right: 4px;\">Export:</span>\n      <button class=\"netlogo-ugly-button\" on-click=\"exportnlogo\">NetLogo</button>   <form action=\"exportGbccWorld\" method=\"post\" enctype=\"multipart/form-data\" style=\"display: inline-block\">   <input type=\"text\" name=\"roomname\" class=\"roomNameInput\" style=\"display:none\"> <button class=\"netlogo-ugly-button\" type=\"submit\" >World</button> </form>  </div>\n    {{/}}\n  </div>\n\n  <div id=\"netlogo-widget-context-menu\" class=\"widget-context-menu\">\n    <div id='widget-creation-disabled-message' style=\"display: none;\">\n      Widget creation is not yet available.  Check back soon.\n    </div>\n  </div>\n\n  <div class=\"netlogo-interface-unlocker\" style=\"display: none\" on-click=\"toggleInterfaceLock\"></div>\n\n  <label class=\"netlogo-widget netlogo-speed-slider\">\n    <span class=\"netlogo-label\">model speed</span>\n    <input type=\"range\" min=-1 max=1 step=0.01 value={{speed}} />\n    <tickCounter isVisible=\"{{primaryView.showTickCounter}}\"\n                 label=\"{{primaryView.tickCounterLabel}}\" value=\"{{ticks}}\" />\n  </label>\n\n  <div style=\"position: relative; width: {{width}}px; height: {{height}}px\"\n       class=\"netlogo-widget-container\"\n       on-contextmenu=\"showContextMenu:{{'widget-creation-disabled-message'}}\">\n    {{#widgetObj:key}}\n      {{# type === 'view'     }} <viewWidget    id=\"{{>widgetID}}\" dims=\"position: absolute; left: {{left}}; top: {{top}};\" widget={{this}} ticks=\"{{ticks}}\" /> {{/}}\n      {{# type === 'textBox'  }} <labelWidget   id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'switch'   }} <switchWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'button'   }} <buttonWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} errorClass=\"{{>errorClass}}\" ticksStarted=\"{{ticksStarted}}\"/> {{/}}\n      {{# type === 'slider'   }} <sliderWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} errorClass=\"{{>errorClass}}\" /> {{/}}\n      {{# type === 'chooser'  }} <chooserWidget id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'monitor'  }} <monitorWidget id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} errorClass=\"{{>errorClass}}\" /> {{/}}\n      {{# type === 'inputBox' }} <inputWidget   id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'plot'     }} <plotWidget    id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} /> {{/}}\n      {{# type === 'output'   }} <outputWidget  id=\"{{>widgetID}}\" dims=\"{{>dimensions}}\" widget={{this}} text=\"{{outputWidgetOutput}}\" /> {{/}}\n    {{/}}\n  </div>\n\n  <div class=\"netlogo-tab-area\" style=\"max-width: {{Math.max(width, 500)}}px\">\n    {{# !readOnly }}\n    <label class=\"netlogo-tab{{#showConsole}} netlogo-active{{/}}\">\n      <input id=\"console-toggle\" type=\"checkbox\" checked=\"{{showConsole}}\" />\n      <span class=\"netlogo-tab-text\">Command Center</span>\n    </label>\n    {{#showConsole}}\n      <console output=\"{{consoleOutput}}\"/>\n    {{/}}\n    {{/}}\n    <label class=\"netlogo-tab{{#showCode}} netlogo-active{{/}}\">\n      <input id=\"code-tab-toggle\" type=\"checkbox\" checked=\"{{ showCode }}\" />\n      <span class=\"netlogo-tab-text\">NetLogo Code</span>\n    </label>\n    {{#showCode}}\n      <editor code='{{code}}' lastCompiledCode='{{lastCompiledCode}}' readOnly='{{readOnly}}' />\n    {{/}}\n             <label class=\"netlogo-tab{{#showGallery}} netlogo-active{{/}}\">\n      <input id=\"gallery-toggle\" type=\"checkbox\" checked=\"{{ showGallery }}\" />\n      <span class=\"netlogo-tab-text\">Gallery</span>\n    </label>\n            <div class=\"netlogo-gallery netlogo-tab-content\"></div>     \n          <label class=\"netlogo-tab{{#showInfo}} netlogo-active{{/}}\">\n      <input id=\"info-toggle\" type=\"checkbox\" checked=\"{{ showInfo }}\" />\n      <span class=\"netlogo-tab-text\">Model Info</span>\n    </label>\n    {{#showInfo}}\n      <infotab rawText='{{info}}' editing='false' /> \n    {{/}}\n  </div>\n</div>";
 
   partials = {
     errorClass: "{{# !compilation.success}}netlogo-widget-error{{/}}",

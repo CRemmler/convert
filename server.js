@@ -133,6 +133,9 @@ app.post('/fileupload',function(req,res){
         }).then(function() {
         fs.readFileAsync("gbcc/js/tortoiseCompiler.js", "utf8").then(function(data) {
            zip.file("js/tortoiseCompiler.js", data);
+        }).then(function() {  
+        fs.readFileAsync("gbcc/export/exportworld.js", "utf8").then(function(data) {
+           zip.file("export/exportworld.js", data);
         }).then(function() {
         fs.readFileAsync("gbcc/package.json", "utf8").then(function(data) {
            zip.file("package.json", data);
@@ -157,7 +160,7 @@ app.post('/fileupload',function(req,res){
         }).catch(function(e) {
           res.sendfile('index.html');
           console.error(e.stack);
-        }); }); }); }); }); }); }); }); }); });
+        }); }); }); }); }); }); }); }); }); }); });
       });
    });
 });
